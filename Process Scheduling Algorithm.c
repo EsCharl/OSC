@@ -1,5 +1,12 @@
 #include <stdio.h>
 
+#ifdef __unix__
+# include <unistd.h>
+#elif defined _WIN32
+# include <windows.h>
+#define sleep(x) Sleep(1000 * (x))
+#endif
+
 struct Job
 {
     char job_name[20];
@@ -9,7 +16,7 @@ struct Job
 };
 
 int main(void){
-	char fname[100];
+  char fname[100];
   char mode;
   char inputMode;
   char exit;
