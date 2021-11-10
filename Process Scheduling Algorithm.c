@@ -36,7 +36,7 @@ int main(void){
   printf("How would you like to input the inputs\n");
   while (!(inputMode == '1' || inputMode == '2')){
     printf("Please enter a value of 1 or 2.\n");
-      printf(" 1. Manually Input.\n 2. Input via file. (please ensure the file is in .txt file and only consist of ' , ' to seperate each category. the order of seperation is \"Job name(no spaces)\",\"Arrival time (please use '.' instead of ':' in seconds)\",\"Burst (Time needed for the job)(please use '.' instead of ':' in seconds)\")\n");
+      printf(" 1. Manually Input.\n 2. Input via file. (please ensure the file is in .txt file and only consist of ' , ' to seperate each category. the order of seperation is \"Job name(no spaces)\" , \"Arrival time (please use '.' instead of ':' in seconds)\" , \"Burst (Time needed for the job)(please use '.' instead of ':' in seconds)\")\n");
         
 	    scanf(" %c", &inputMode);
   }
