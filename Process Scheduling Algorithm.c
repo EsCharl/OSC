@@ -259,7 +259,7 @@ int main(void){
 
                         while(exception){ //while exception exists
 
-                            if(temp->burstLeft != 0){ //if there is burst time left                                                                        //but previous processes has completed
+                            if(temp->burstLeft != 0){ //if there is burst time left                                                                       
 
                                 if(temp->burstLeft > timeQuantum){ //if burst time greater than time quantum
                                     systemClock += (timeQuantum + delay); //add time quantum and delay to clock
