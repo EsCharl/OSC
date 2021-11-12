@@ -168,7 +168,6 @@ int main(void){
     do{
         doneFlag = 0; //done flag
         timeFlag = 1; //time flag
-        exception = 0; //reset exception
         temp = sPtr; //reset pointer
 
         while(temp!=NULL){
@@ -221,10 +220,15 @@ int main(void){
             else{ //if process arrived after next process starts
                     exception = 0; //reset exception
 
-                    if((temp==sPtr)||newHead){ //if process is first or process is new head of list
-                        newHead = 0; //reset head of list flag
+                    for(count=temp;count!=NULL;count=count->next){ //for rest of the processes
+                        if(count->arrivalTime<=systemClock){ //find which processes arrive within the time quantum and delay
+                            exception++; //add number of exceptions
+                        }
+                    }
 
-                        if(temp->burstLeft != 0){ //if there is burst time left                                                                        //but previous processes has completed
+                    while(exception){ //while exception exists
+
+                        if(temp->burstLeft != 0){ //if there is burst time left
 
                             if(temp->burstLeft > timeQuantum){ //if burst time greater than time quantum
                                 systemClock += (timeQuantum + delay); //add time quantum and delay to clock
@@ -248,44 +252,13 @@ int main(void){
                             temp = temp->next; //point to next process
                         }
 
+                        exception--; //decrement exception
                     }
-                    else{ //loop back if process is not first
 
-                        for(count=temp;count!=NULL;count=count->next){ //for rest of the processes
-                            if(count->arrivalTime<=systemClock){ //find which processes arrive within the time quantum and delay
-                                exception++; //add number of exceptions
-                            }
-                        }
-
-                        while(exception){ //while exception exists
-
-                            if(temp->burstLeft != 0){ //if there is burst time left                                                                       
-
-                                if(temp->burstLeft > timeQuantum){ //if burst time greater than time quantum
-                                    systemClock += (timeQuantum + delay); //add time quantum and delay to clock
-                                    temp->burstLeft -= timeQuantum; //minus time quantum from burst time
-                                    timeFlag = 0; //set time flag to indicate previous process has not completed
-                                }
-                                else{ //if burst time is less than or equal to time quantum
-                                    systemClock += (temp->burstLeft + delay); //add burst time and delay to clock
-                                    temp->burstLeft = 0; //set burst time left to 0
-
-                                    temp->completionTime = systemClock; //get completion time from clock
-                                    temp->turnaroundTime = (temp->completionTime - temp->arrivalTime); //get turnaround time from formula
-                                    temp->waitingTime = (temp->turnaroundTime - temp->burst); //get waiting time from formula
-                                }
-
-                                doneFlag = 1; //set flag to continue loop
-                                temp = temp->next; //point to next process
-
-                            }
-                            else if(temp->burstLeft == 0){ //if current process has already finished
-                                temp = temp->next; //point to next process
-                            }
-
-                            exception--; //decrement exception
-                        }
-
+                    if((temp==sPtr->next)||newHead){ //if process is first or process has new head of list
+                        newHead = 0; //reset head of list flag
+                    }
+                    else{ //process is not head of list
                         break; //restart loop
                     }
                 }
