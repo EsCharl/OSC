@@ -203,7 +203,10 @@ int main(void){
                         timeFlag = 0; //set time flag to indicate previous process has not completed
                     }
                     else{ //if burst time is less than or equal to time quantum
-                        systemClock += (temp->burstLeft + delay); //add burst time and delay to clock
+                        systemClock += temp->burstLeft; //add burst time to clock
+                        temp->completionTime = systemClock; //get completion time from clock
+                        systemClock += delay; //add delay to clock
+
                         temp->burstLeft = 0; //set burst time left to 0
 
                         overheadFlag = 1; //set overhead flag
@@ -219,7 +222,6 @@ int main(void){
                             systemClock -= delay; //remove an overhead when all processes before system clock are complete
                         }
 
-                        temp->completionTime = systemClock; //get completion time from clock
                         temp->turnaroundTime = (temp->completionTime - temp->arrivalTime); //get turnaround time from formula
                         temp->waitingTime = (temp->turnaroundTime - temp->burst); //get waiting time from formula
                     }
@@ -251,7 +253,10 @@ int main(void){
                                 timeFlag = 0; //set time flag to indicate previous process has not completed
                             }
                             else{ //if burst time is less than or equal to time quantum
-                                systemClock += (temp->burstLeft + delay); //add burst time and delay to clock
+                                systemClock += temp->burstLeft; //add burst time clock
+                                temp->completionTime = systemClock; //get completion time from clock
+                                systemClock += delay; //add delay to clock
+
                                 temp->burstLeft = 0; //set burst time left to 0
 
                                 overheadFlag = 1; //set overhead flag
@@ -267,7 +272,6 @@ int main(void){
                                     systemClock -= delay; //remove an overhead when all processes before system clock are complete
                                 }
 
-                                temp->completionTime = systemClock; //get completion time from clock
                                 temp->turnaroundTime = (temp->completionTime - temp->arrivalTime); //get turnaround time from formula
                                 temp->waitingTime = (temp->turnaroundTime - temp->burst); //get waiting time from formula
                             }
