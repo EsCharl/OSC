@@ -122,15 +122,17 @@ int main(void){
 	    scanf(" %c", &mode);
   }
 
-  int sortFlag,doneFlag,timeFlag,newHead=0,systemClock=0,timeQuantum,delay,hold,exception;
+  int sortFlag,doneFlag,timeFlag,newHead=0,systemClock=0,timeQuantum,delay = 0,hold,exception;
   char nameHold[100];
   nodePtr temp,count,lPtr=NULL;
 
   printf("Please input the time quantum.\n");
   scanf("%d", &timeQuantum); //get time quantum
 
-  printf("Please input the time delay.\n");
-  scanf("%d", &delay); //get overhead
+  if (mode == '2'){
+    printf("Please input the time delay.\n");
+    scanf("%d", &delay); //get overhead
+  }
 
   if (sPtr == NULL){ //if list is empty, end program
         printf("No processes found\n");
@@ -267,7 +269,7 @@ int main(void){
     }while(doneFlag); //flag to continue loop
 
   for(temp=sPtr;temp!=NULL;temp=temp->next){ //print out all information
-    printf("%s %d %d %d %d %d %d\n",temp->job_name,temp->arrivalTime,temp->burst,temp->burstLeft,temp->completionTime,temp->turnaroundTime,temp->waitingTime);
+    printf("%s , %d , %d : %d %d %d %d\n",temp->job_name,temp->arrivalTime,temp->burst,temp->burstLeft,temp->completionTime,temp->turnaroundTime,temp->waitingTime);
   }
 
   return 0;
