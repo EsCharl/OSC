@@ -122,16 +122,19 @@ int main(void){
 	    scanf(" %c", &mode);
   }
 
-  int sortFlag,doneFlag,timeFlag,overheadFlag,newHead=0,systemClock=0,timeQuantum,delay = 0,hold,queue;
+  int sortFlag,systemClock=0,timeQuantum,delay=0,hold,count=0,breakFlag=1,loop,timeLeft,lockFlag,delayFlag=0,delayTime;
   char nameHold[100];
-  nodePtr temp,count,lPtr=NULL;
+  nodePtr temp,lPtr=NULL;
+  nodePtr queue[6] = { NULL };
 
   printf("Please input the time quantum.\n");
   scanf("%d", &timeQuantum); //get time quantum
 
-  if (mode == '2'){
-    printf("Please input the time delay.\n");
-    scanf("%d", &delay); //get overhead
+  if (mode == '2'){ //RR with overhead
+    while(delay==0){ //make sure input is not 0
+        printf("Please input the time delay.\n");
+        scanf("%d", &delay); //get overhead
+    }
   }
 
   if (sPtr == NULL){ //if list is empty, end program
@@ -167,136 +170,103 @@ int main(void){
         temp->burstLeft = temp->burst;
     }
 
-    do{
-        doneFlag = 0; //done flag
-        timeFlag = 1; //time flag
-        temp = sPtr; //reset pointer
+    timeLeft = timeQuantum; //set initial time
+    delayTime = delay;
 
-        while(temp!=NULL){
+    for(systemClock=0;breakFlag;systemClock++){ //system clock, ends when processes terminate
 
-            if(temp->arrivalTime > systemClock){ //if the process has not arrived yet
+        for(temp=sPtr;temp!=NULL;temp=temp->next){ //loop through list
 
-                if(temp==sPtr){ //if the process is first process
-                    systemClock = temp->arrivalTime; //change clock time to arrival time
+            if(temp->arrivalTime==systemClock&&temp->burstLeft!=0){ //if arrival time matches clock and burst time left
+
+                if(queue[0]==NULL){ //if first node is empty
+                    queue[0] = temp; //fill first node
+                    lockFlag = 1;
                 }
-                else{ //if not first process
+                else{ //if first node is filled
 
-                    if(timeFlag){ //time flag checks to see if all previous processes have completed
-                        systemClock = temp->arrivalTime; //if all previous processes have completed, change clock time to arrival time
-                        newHead = 1; //set new head flag
+                    for(loop=0;loop<6;loop++){ //loop through queue
+
+                        if(queue[loop]==NULL){ //find empty node
+                            queue[loop] = temp; //fill empty node
+                            break;
+                        }
                     }
-                    else{ //if previous processes have not completed, restart loop to complete the previous processes
+                }
+            }
+        }
+
+        if(delayFlag){
+
+            delayTime--; //minus delay time
+
+            if(delayTime==0){ //if delay time finished
+                delayFlag = 0; //turn off delay flag
+            }
+
+            continue; //go to next loop without processing
+        }
+
+        if(queue[0]!=NULL&&!(lockFlag)){ //if process is in queue and not same loop
+
+            timeLeft--; //minus time
+            queue[0]->burstLeft--; //minus burst
+
+            if(queue[0]->burstLeft==0){ //if process completes
+
+                queue[0]->completionTime = systemClock; //get completion time from clock
+                queue[0]->turnaroundTime = (queue[0]->completionTime - queue[0]->arrivalTime); //get turnaround time from formula
+                queue[0]->waitingTime = (queue[0]->turnaroundTime - queue[0]->burst); //get waiting time from formula
+
+                for(loop=0;loop<6-1;loop++){ //loop through queue
+                    queue[loop]=queue[loop+1]; //move jobs to the front
+                    queue[loop+1]=NULL; //set last queue as NULL
+                }
+
+                timeLeft = timeQuantum; //reset time
+
+                if(queue[0]!=NULL&&mode == '2'){ //if there is still a job and correct mode
+                    delayFlag = 1; //set delay flag
+                    delayTime = delay; //reset delay time
+                }
+            }
+            else if(timeLeft==0){ //if time finishes
+
+                for(loop=0;loop<6;loop++){ //loop through queue
+
+                    if(queue[loop]==NULL){ //find empty node
+                        queue[loop] = queue[0]; //fill empty node
                         break;
                     }
                 }
-            doneFlag = 1; // set flag to continue loop
-        }
-        else if(temp->arrivalTime <= systemClock){ //if the process has arrived
 
-            if(temp->arrivalTime < systemClock - timeQuantum - delay){ //if process arrived before next process starts
-
-                if(temp->burstLeft != 0){ //if there is burst time left
-
-                    if(temp->burstLeft > timeQuantum){ //if burst time greater than time quantum
-                        systemClock += (timeQuantum + delay); //add time quantum and delay to clock
-                        temp->burstLeft -= timeQuantum; //minus time quantum from burst time
-                        timeFlag = 0; //set time flag to indicate previous process has not completed
-                    }
-                    else{ //if burst time is less than or equal to time quantum
-                        systemClock += temp->burstLeft; //add burst time to clock
-                        temp->completionTime = systemClock; //get completion time from clock
-                        systemClock += delay; //add delay to clock
-
-                        temp->burstLeft = 0; //set burst time left to 0
-
-                        overheadFlag = 1; //set overhead flag
-
-                        for(count=sPtr;count!=NULL;count=count->next){ //loop through every process
-                            if(!((count->arrivalTime <= systemClock - delay&&count->burstLeft == 0)||(count->arrivalTime > systemClock - delay&&count->burstLeft != 0))){
-                                overheadFlag = 0; //turn off overhead flag
-                                break; //leave loop if even one condition failed
-                            }
-                        }
-
-                        if(overheadFlag){ //if process has stopped
-                            systemClock -= delay; //remove an overhead when all processes before system clock are complete
-                        }
-
-                        temp->turnaroundTime = (temp->completionTime - temp->arrivalTime); //get turnaround time from formula
-                        temp->waitingTime = (temp->turnaroundTime - temp->burst); //get waiting time from formula
-                    }
-
-                    doneFlag = 1; //set flag to continue loop
-                    temp = temp->next; //point to next process
-
+                for(loop=0;loop<6-1;loop++){ //loop through queue
+                    queue[loop]=queue[loop+1]; //move jobs to the front
+                    queue[loop+1]=NULL; //set last queue as NULL
                 }
-                else if(temp->burstLeft == 0){ //if current process has already finished
-                    temp = temp->next; //point to next process
-                }
-            }
-            else{ //if process arrived after next process starts
-                    queue = 0; //reset queue
 
-                    for(count=temp;count!=NULL;count=count->next){ //for rest of the processes
-                        if(count->arrivalTime<=systemClock){ //find which processes arrive within the time quantum and delay
-                            queue++; //add number of queue
-                        }
-                    }
+                timeLeft = timeQuantum; //reset time
 
-                    while(queue){ //while queue exists
-
-                        if(temp->burstLeft != 0){ //if there is burst time left
-
-                            if(temp->burstLeft > timeQuantum){ //if burst time greater than time quantum
-                                systemClock += (timeQuantum + delay); //add time quantum and delay to clock
-                                temp->burstLeft -= timeQuantum; //minus time quantum from burst time
-                                timeFlag = 0; //set time flag to indicate previous process has not completed
-                            }
-                            else{ //if burst time is less than or equal to time quantum
-                                systemClock += temp->burstLeft; //add burst time clock
-                                temp->completionTime = systemClock; //get completion time from clock
-                                systemClock += delay; //add delay to clock
-
-                                temp->burstLeft = 0; //set burst time left to 0
-
-                                overheadFlag = 1; //set overhead flag
-
-                                for(count=sPtr;count!=NULL;count=count->next){ //loop through every process
-                                    if(!((count->arrivalTime <= systemClock - delay&&count->burstLeft == 0)||(count->arrivalTime > systemClock - delay&&count->burstLeft != 0))){
-                                        overheadFlag = 0; //turn off overhead flag
-                                        break; //leave loop if even one condition failed
-                                    }
-                                }
-
-                                if(overheadFlag){ //if process has stopped
-                                    systemClock -= delay; //remove an overhead when all processes before system clock are complete
-                                }
-
-                                temp->turnaroundTime = (temp->completionTime - temp->arrivalTime); //get turnaround time from formula
-                                temp->waitingTime = (temp->turnaroundTime - temp->burst); //get waiting time from formula
-                            }
-
-                            doneFlag = 1; //set flag to continue loop
-                            temp = temp->next; //point to next process
-
-                        }
-                        else if(temp->burstLeft == 0){ //if current process has already finished
-                            temp = temp->next; //point to next process
-                        }
-
-                        queue--; //decrement queue
-                    }
-
-                    if((temp==sPtr->next)||newHead){ //if process is first or process has new head of list
-                        newHead = 0; //reset head of list flag
-                    }
-                    else{ //process is not head of list
-                        break; //restart loop
-                    }
+                if(queue[0]!=NULL&&mode == '2'){ //if there is still a job and correct mode
+                    delayFlag = 1; //set delay flag
+                    delayTime = delay; //reset delay time
                 }
             }
         }
-    }while(doneFlag); //flag to continue loop
+
+        if(lockFlag){ //prevent same loop running
+            lockFlag = 0;
+        }
+
+        breakFlag = 0; //break flag
+
+        for(temp=sPtr;temp!=NULL;temp=temp->next){ //if all processes ended
+            if(temp->burstLeft!=0){
+                breakFlag = 1; //set flag
+                break;
+            }
+        }
+    }
 
   for(temp=sPtr;temp!=NULL;temp=temp->next){ //print out all information
     printf("%s , %d , %d : %d %d %d %d\n",temp->job_name,temp->arrivalTime,temp->burst,temp->burstLeft,temp->completionTime,temp->turnaroundTime,temp->waitingTime);
