@@ -169,36 +169,43 @@ int main(void) {
         temp->burstLeft = temp->burst;
     }
 
+    printf("\n");
+
     do {
         doneFlag = 0; //done flag
         flag = 0;
 
         for (temp = sPtr; temp != NULL; temp = temp->next) {
-            flag++;
 
             if (temp->burstLeft != 0)
                 doneFlag++;
 
-            if (temp->arrivalTime > systemClock && doneFlag == flag) {
+            if (temp->arrivalTime > systemClock && flag == 0) {
                 systemClock += (temp->arrivalTime - systemClock);
+                printf("%d\n", systemClock);
+                flag++;
             }
 
-            if (temp->burstLeft > timeQuantum) {
-                temp->burstLeft -= timeQuantum;
-                systemClock += timeQuantum;
-                systemClock += delay;
+            if (systemClock >= temp->arrivalTime) {
+                if (temp->burstLeft > timeQuantum && temp->arrivalTime) {
+                    temp->burstLeft -= timeQuantum;
+                    systemClock += timeQuantum;
+                    systemClock += delay;
+                    flag++;
+                }
+                else if (temp->burstLeft <= timeQuantum && temp->burstLeft != 0) {
+                    systemClock += temp->burstLeft;
+                    temp->burstLeft -= temp->burstLeft;
+                    temp->completionTime = systemClock;
+                    temp->turnaroundTime = temp->completionTime - temp->arrivalTime;
+                    temp->waitingTime = temp->turnaroundTime - temp->burst;
+                    systemClock += delay;
+                    flag++;
+                }
+                else if (temp->burstLeft == 0) {
+                }
             }
-            else if (temp->burstLeft == 0) {
 
-            }
-            else {
-                systemClock += temp->burstLeft;
-                temp->burstLeft -= temp->burstLeft;
-                temp->completionTime = systemClock;
-                temp->turnaroundTime = temp->completionTime - temp->arrivalTime;
-                temp->waitingTime = temp->turnaroundTime - temp->burst;
-                systemClock += delay;
-            }
         }
 
 
