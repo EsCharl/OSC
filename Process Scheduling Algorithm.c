@@ -122,7 +122,7 @@ int main(void){
 	    scanf(" %c", &mode);
   }
 
-  int sortFlag,doneFlag,timeFlag,newHead=0,systemClock=0,timeQuantum,delay = 0,hold,exception;
+  int sortFlag,doneFlag,timeFlag,overheadFlag,newHead=0,systemClock=0,timeQuantum,delay = 0,hold,queue;
   char nameHold[100];
   nodePtr temp,count,lPtr=NULL;
 
@@ -183,7 +183,7 @@ int main(void){
 
                     if(timeFlag){ //time flag checks to see if all previous processes have completed
                         systemClock = temp->arrivalTime; //if all previous processes have completed, change clock time to arrival time
-                        newHead = 1;
+                        newHead = 1; //set new head flag
                     }
                     else{ //if previous processes have not completed, restart loop to complete the previous processes
                         break;
@@ -194,8 +194,8 @@ int main(void){
         else if(temp->arrivalTime <= systemClock){ //if the process has arrived
 
             if(temp->arrivalTime < systemClock - timeQuantum - delay){ //if process arrived before next process starts
-                                                                                                                                               //or if process arrived after next process starts
-                if(temp->burstLeft != 0){ //if there is burst time left                                                                        //but previous processes has completed
+
+                if(temp->burstLeft != 0){ //if there is burst time left
 
                     if(temp->burstLeft > timeQuantum){ //if burst time greater than time quantum
                         systemClock += (timeQuantum + delay); //add time quantum and delay to clock
@@ -205,6 +205,19 @@ int main(void){
                     else{ //if burst time is less than or equal to time quantum
                         systemClock += (temp->burstLeft + delay); //add burst time and delay to clock
                         temp->burstLeft = 0; //set burst time left to 0
+
+                        overheadFlag = 1; //set overhead flag
+
+                        for(count=sPtr;count!=NULL;count=count->next){ //loop through every process
+                            if(!((count->arrivalTime <= systemClock - delay&&count->burstLeft == 0)||(count->arrivalTime > systemClock - delay&&count->burstLeft != 0))){
+                                overheadFlag = 0; //turn off overhead flag
+                                break; //leave loop if even one condition failed
+                            }
+                        }
+
+                        if(overheadFlag){ //if process has stopped
+                            systemClock -= delay; //remove an overhead when all processes before system clock are complete
+                        }
 
                         temp->completionTime = systemClock; //get completion time from clock
                         temp->turnaroundTime = (temp->completionTime - temp->arrivalTime); //get turnaround time from formula
@@ -220,15 +233,15 @@ int main(void){
                 }
             }
             else{ //if process arrived after next process starts
-                    exception = 0; //reset exception
+                    queue = 0; //reset queue
 
                     for(count=temp;count!=NULL;count=count->next){ //for rest of the processes
                         if(count->arrivalTime<=systemClock){ //find which processes arrive within the time quantum and delay
-                            exception++; //add number of exceptions
+                            queue++; //add number of queue
                         }
                     }
 
-                    while(exception){ //while exception exists
+                    while(queue){ //while queue exists
 
                         if(temp->burstLeft != 0){ //if there is burst time left
 
@@ -240,6 +253,19 @@ int main(void){
                             else{ //if burst time is less than or equal to time quantum
                                 systemClock += (temp->burstLeft + delay); //add burst time and delay to clock
                                 temp->burstLeft = 0; //set burst time left to 0
+
+                                overheadFlag = 1; //set overhead flag
+
+                                for(count=sPtr;count!=NULL;count=count->next){ //loop through every process
+                                    if(!((count->arrivalTime <= systemClock - delay&&count->burstLeft == 0)||(count->arrivalTime > systemClock - delay&&count->burstLeft != 0))){
+                                        overheadFlag = 0; //turn off overhead flag
+                                        break; //leave loop if even one condition failed
+                                    }
+                                }
+
+                                if(overheadFlag){ //if process has stopped
+                                    systemClock -= delay; //remove an overhead when all processes before system clock are complete
+                                }
 
                                 temp->completionTime = systemClock; //get completion time from clock
                                 temp->turnaroundTime = (temp->completionTime - temp->arrivalTime); //get turnaround time from formula
@@ -254,7 +280,7 @@ int main(void){
                             temp = temp->next; //point to next process
                         }
 
-                        exception--; //decrement exception
+                        queue--; //decrement queue
                     }
 
                     if((temp==sPtr->next)||newHead){ //if process is first or process has new head of list
