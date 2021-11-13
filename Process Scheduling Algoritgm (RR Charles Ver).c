@@ -184,7 +184,7 @@ int main(void){
           }
 
           if (systemClock >= temp->arrivalTime){
-            if (temp->burstLeft > timeQuantum && temp->arrivalTime){
+            if (temp->burstLeft > timeQuantum){
               temp->burstLeft -= timeQuantum;
               systemClock += timeQuantum;
               systemClock += delay;
