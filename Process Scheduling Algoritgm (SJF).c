@@ -192,7 +192,7 @@ int main(void) {
             }
         }
 
-        for (loop = 1; loop < size; loop++) { //for preemptive loop = 0, non-preemptive loop = 1
+        for (loop = 1; loop < size; loop++) { //activate for non-preemptive loop 
 
             if (queue[loop] == NULL || queue[loop + 1] == NULL) { //if there are null pointers, break so no dereferencing occurs and causes error
                 break; //break
@@ -228,7 +228,7 @@ int main(void) {
             lockFlag = 0;
         }
 
-        for (loop = 1; loop < size; loop++) { //for preemptive loop = 0, non-preemptive loop = 1
+        for (loop = 0; loop < size; loop++) { // activate for preemptive loop 
 
             if (queue[loop] == NULL || queue[loop + 1] == NULL) { //if there are null pointers, break so no dereferencing occurs and causes error
                 break; //break
