@@ -124,7 +124,7 @@ int main(void) {
         scanf(" %c", &mode);
     }
 
-    int sortFlag, systemClock = 0, hold, count = 0, breakFlag = 1, loop, lockFlag, size = 0;
+    int sortFlag, systemClock = 0, hold, count = 0, breakFlag = 1, loop, lockFlag, size = 0, moveFlag=0;
     char nameHold[100];
     nodePtr temp, lPtr = NULL;
 
@@ -197,13 +197,13 @@ int main(void) {
             do{
                 sortFlag = 0;
 
-                for(loop=1;loop<size;loop++){ //for preemptive loop = 0, non-preemptive loop = 1
+                for(loop=1;loop<size;loop++){ //start from second node
 
                     if(queue[loop]==NULL||queue[loop+1]==NULL){ //if there are null pointers, break so no dereferencing occurs and causes error
                         break; //break
                     }
 
-                    if (queue[loop]->burstLeft > queue[loop+1]->burstLeft||(queue[loop]->burstLeft == queue[loop+1]->burstLeft&&queue[loop]->burst > queue[loop+1]->burst)){ //if current is larger than next number
+                    if (queue[loop]->burstLeft > queue[loop+1]->burstLeft){ //if current is larger than next number
 
                         queue[size] = queue[loop];
                         queue[loop] = queue[loop+1];
@@ -241,13 +241,17 @@ int main(void) {
             do{
                 sortFlag = 0;
 
-                for(loop=0;loop<size;loop++){ //for preemptive loop = 0, non-preemptive loop = 1
+                for(loop=0;loop<size;loop++){ //start from first node
 
                     if(queue[loop]==NULL||queue[loop+1]==NULL){ //if there are null pointers, break so no dereferencing occurs and causes error
                         break; //break
                     }
 
-                    if (queue[loop]->burstLeft > queue[loop+1]->burstLeft||(queue[loop]->burstLeft == queue[loop+1]->burstLeft&&queue[loop]->burst > queue[loop+1]->burst)){ //if current is larger than next number
+                    if (queue[loop]->burstLeft > queue[loop+1]->burstLeft){ //if current is larger than next number
+
+                        if(queue[0]->burstLeft > queue[1]->burstLeft){ //if first node is ever moved
+                            moveFlag = 1; //set move flag
+                        }
 
                         queue[size] = queue[loop];
                         queue[loop] = queue[loop+1];
@@ -255,10 +259,22 @@ int main(void) {
                         queue[size] = NULL; //set temp pointer to NULL
                         sortFlag = 1;
                     }
+                    else if(queue[loop]->burstLeft == queue[loop+1]->burstLeft){ //if burst time left equal
+
+                        if(moveFlag&&queue[loop]->burst > queue[loop+1]->burst){ //if first node moved, sort by burst time
+
+                            queue[size] = queue[loop];
+                            queue[loop] = queue[loop+1];
+                            queue[loop+1] = queue[size]; //bubble sort queue pointer
+                            queue[size] = NULL; //set temp pointer to NULL
+                            sortFlag = 1;
+                        }
+                    }
                 }
             }while(sortFlag);
         }
 
+        moveFlag = 0; //reset move flag
         breakFlag = 0; //break flag
 
         for (temp = sPtr; temp != NULL; temp = temp->next) { //if all processes ended
