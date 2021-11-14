@@ -192,6 +192,21 @@ int main(void) {
             }
         }
 
+        for (loop = 1; loop < size; loop++) { //for preemptive loop = 0, non-preemptive loop = 1
+
+            if (queue[loop] == NULL || queue[loop + 1] == NULL) { //if there are null pointers, break so no dereferencing occurs and causes error
+                break; //break
+            }
+
+            if (queue[loop]->burstLeft > queue[loop + 1]->burstLeft) { //if current is larger than next number
+
+                queue[size] = queue[loop];
+                queue[loop] = queue[loop + 1];
+                queue[loop + 1] = queue[size]; //bubble sort queue pointer
+                queue[size] = NULL; //set temp pointer to NULL
+            }
+        }
+
         if (queue[0] != NULL && !(lockFlag)) { //if process is in queue and not same loop
 
             queue[0]->burstLeft--; //minus burst
@@ -213,7 +228,7 @@ int main(void) {
             lockFlag = 0;
         }
 
-        for (loop = 0; loop < size; loop++) { //for preemptive loop = 0, non-preemptive loop = 1
+        for (loop = 1; loop < size; loop++) { //for preemptive loop = 0, non-preemptive loop = 1
 
             if (queue[loop] == NULL || queue[loop + 1] == NULL) { //if there are null pointers, break so no dereferencing occurs and causes error
                 break; //break
