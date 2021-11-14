@@ -47,7 +47,7 @@ int main(void) {
     printf("How would you like to input the inputs\n");
     while (!(inputMode == '1' || inputMode == '2')) {
         printf("Please enter a value of 1 or 2.\n");
-        printf(" 1. Manually Input.\n 2. Input via file. (please ensure the file is in .txt file and only consist of ' , ' to seperate each category. the order of seperation is \"Job name(no spaces)\" , \"Arrival time (please use '.' instead of ':' in seconds)\" , \"Burst (Time needed for the job)(please use '.' instead of ':' in seconds)\")\n");
+        printf(" 1. Manually Input.\n 2. Input via .txt file.\n");
 
         scanf(" %c", &inputMode);
     }
@@ -80,8 +80,14 @@ int main(void) {
         }
     }
     else {
-        printf("Please input the file you'd like to load into the program.\n");
+        printf("\nPlease input the file you'd like to load into the program.\n");
+        printf("    *Please ensure the file is in .txt file\n    *Use ' , ' to seperate each category. the format of seperation should be: \n           (Job Name) , (Arrival time) , (Burst)\n\n    *Job Name Should not contain any spaces\n    *To seperate minute and seconds, use '.' instead of ':'\n");
         scanf("%s", fname);
+        char *check;
+
+    check = strstr(fname, ".txt");
+    if (!check)
+        strcat(fname,".txt");
         read = fopen(fname, "r");
 
         //if the file is not found.
@@ -118,7 +124,7 @@ int main(void) {
     //return 0;
 
     while (!(mode == '1' || mode == '2' || mode == '3')) {
-        printf("Please enter a value between 1 to 3.\n");
+        printf("\nPlease enter a value between 1 to 3.\n");
         printf("Please select one of the scheduling algorithm that you wish to use.\n 1. Shortest Job First (SJF) Non-Preemptive Version. \n 2. Round Robin (RR) with Overhead. \n 3. Round Robin (RR) without Overhead.\n");
 
         scanf(" %c", &mode);
@@ -321,5 +327,4 @@ int main(void) {
 
     return 0;
 
-    
 }
