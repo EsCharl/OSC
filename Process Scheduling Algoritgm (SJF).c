@@ -261,7 +261,7 @@ int main(void) {
                     }
                     else if(queue[loop]->burstLeft == queue[loop+1]->burstLeft){ //if burst time left equal
 
-                        if(moveFlag&&queue[loop]->burst > queue[loop+1]->burst){ //if first node moved, sort by burst time
+                        if(moveFlag&&queue[loop]->arrivalTime < queue[loop+1]->arrivalTime){ //if first node moved, sort by latest arrival time
 
                             queue[size] = queue[loop];
                             queue[loop] = queue[loop+1];
