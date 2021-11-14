@@ -117,9 +117,9 @@ int main(void) {
 
     //return 0;
 
-    while (!(mode == '1' || mode == '2' || mode == '3')) {
-        printf("Please enter a value between 1 to 3.\n");
-        printf("Please select one of the scheduling algorithm that you wish to use.\n 1. Shortest Job First (SJF) Non-Preemptive Version. \n 2. Round Robin (RR) with Overhead. \n 3. Round Robin (RR) without Overhead.\n");
+    while (!(mode == '1' || mode == '2' || mode == '3' || mode == '0')) {
+        printf("Please enter a value between 0 to 3.\n");
+        printf("Please select one of the scheduling algorithm that you wish to use.\n 0. Shortest Job First (SJF) Preemptive. \n 1. Shortest Job First (SJF) Non-Preemptive Version. \n 2. Round Robin (RR) with Overhead. \n 3. Round Robin (RR) without Overhead.\n");
 
         scanf(" %c", &mode);
     }
@@ -192,55 +192,78 @@ int main(void) {
             }
         }
 
-        for (loop = 1; loop < size; loop++) { //activate for non-preemptive loop 
+        if (mode == '1') {
+            for (loop = 1; loop < size; loop++) { //for preemptive loop = 0, non-preemptive loop = 1
 
-            if (queue[loop] == NULL || queue[loop + 1] == NULL) { //if there are null pointers, break so no dereferencing occurs and causes error
-                break; //break
+                if (queue[loop] == NULL || queue[loop + 1] == NULL) { //if there are null pointers, break so no dereferencing occurs and causes error
+                    break; //break
+                }
+
+                if (queue[loop]->burstLeft > queue[loop + 1]->burstLeft) { //if current is larger than next number
+
+                    queue[size] = queue[loop];
+                    queue[loop] = queue[loop + 1];
+                    queue[loop + 1] = queue[size]; //bubble sort queue pointer
+                    queue[size] = NULL; //set temp pointer to NULL
+                }
             }
 
-            if (queue[loop]->burstLeft > queue[loop + 1]->burstLeft) { //if current is larger than next number
+            if (queue[0] != NULL && !(lockFlag)) { //if process is in queue and not same loop
 
-                queue[size] = queue[loop];
-                queue[loop] = queue[loop + 1];
-                queue[loop + 1] = queue[size]; //bubble sort queue pointer
-                queue[size] = NULL; //set temp pointer to NULL
-            }
-        }
+                queue[0]->burstLeft--; //minus burst
 
-        if (queue[0] != NULL && !(lockFlag)) { //if process is in queue and not same loop
+                if (queue[0]->burstLeft == 0) { //if process completes
 
-            queue[0]->burstLeft--; //minus burst
+                    queue[0]->completionTime = systemClock; //get completion time from clock
+                    queue[0]->turnaroundTime = (queue[0]->completionTime - queue[0]->arrivalTime); //get turnaround time from formula
+                    queue[0]->waitingTime = (queue[0]->turnaroundTime - queue[0]->burst); //get waiting time from formula
 
-            if (queue[0]->burstLeft == 0) { //if process completes
-
-                queue[0]->completionTime = systemClock; //get completion time from clock
-                queue[0]->turnaroundTime = (queue[0]->completionTime - queue[0]->arrivalTime); //get turnaround time from formula
-                queue[0]->waitingTime = (queue[0]->turnaroundTime - queue[0]->burst); //get waiting time from formula
-
-                for (loop = 0; loop < size; loop++) { //loop through queue
-                    queue[loop] = queue[loop + 1]; //move jobs to the front
-                    queue[loop + 1] = NULL; //set last queue as NULL
+                    for (loop = 0; loop < size; loop++) { //loop through queue
+                        queue[loop] = queue[loop + 1]; //move jobs to the front
+                        queue[loop + 1] = NULL; //set last queue as NULL
+                    }
                 }
             }
         }
 
-        if (lockFlag) { //prevent same loop running
-            lockFlag = 0;
+        if (mode == '0') {
+            if (queue[0] != NULL && !(lockFlag)) { //if process is in queue and not same loop
+
+                queue[0]->burstLeft--; //minus burst
+
+                if (queue[0]->burstLeft == 0) { //if process completes
+
+                    queue[0]->completionTime = systemClock; //get completion time from clock
+                    queue[0]->turnaroundTime = (queue[0]->completionTime - queue[0]->arrivalTime); //get turnaround time from formula
+                    queue[0]->waitingTime = (queue[0]->turnaroundTime - queue[0]->burst); //get waiting time from formula
+
+                    for (loop = 0; loop < size; loop++) { //loop through queue
+                        queue[loop] = queue[loop + 1]; //move jobs to the front
+                        queue[loop + 1] = NULL; //set last queue as NULL
+                    }
+                }
+            }
+
+            for (loop = 0; loop < size; loop++) { //for preemptive loop = 0, non-preemptive loop = 1
+
+                if (queue[loop] == NULL || queue[loop + 1] == NULL) { //if there are null pointers, break so no dereferencing occurs and causes error
+                    break; //break
+                }
+
+                if (queue[loop]->burstLeft > queue[loop + 1]->burstLeft) { //if current is larger than next number
+
+                    queue[size] = queue[loop];
+                    queue[loop] = queue[loop + 1];
+                    queue[loop + 1] = queue[size]; //bubble sort queue pointer
+                    queue[size] = NULL; //set temp pointer to NULL
+                }
+            }
         }
 
-        for (loop = 0; loop < size; loop++) { // activate for preemptive loop 
 
-            if (queue[loop] == NULL || queue[loop + 1] == NULL) { //if there are null pointers, break so no dereferencing occurs and causes error
-                break; //break
-            }
 
-            if (queue[loop]->burstLeft > queue[loop + 1]->burstLeft) { //if current is larger than next number
-
-                queue[size] = queue[loop];
-                queue[loop] = queue[loop + 1];
-                queue[loop + 1] = queue[size]; //bubble sort queue pointer
-                queue[size] = NULL; //set temp pointer to NULL
-            }
+        if (lockFlag) { //prevent same loop running
+            lockFlag = 0;
         }
 
         breakFlag = 0; //break flag
