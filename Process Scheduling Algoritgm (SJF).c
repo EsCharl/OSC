@@ -192,22 +192,27 @@ int main(void) {
             }
         }
 
-        if(mode == '1'){ //non-preemptive
+         if(mode == '1'){ //non-preemptive
 
-            for(loop=1;loop<size;loop++){ //for preemptive loop = 0, non-preemptive loop = 1
+            do{
+                sortFlag = 0;
 
-                if(queue[loop]==NULL||queue[loop+1]==NULL){ //if there are null pointers, break so no dereferencing occurs and causes error
-                    break; //break
+                for(loop=1;loop<size;loop++){ //for preemptive loop = 0, non-preemptive loop = 1
+
+                    if(queue[loop]==NULL||queue[loop+1]==NULL){ //if there are null pointers, break so no dereferencing occurs and causes error
+                        break; //break
+                    }
+
+                    if (queue[loop]->burstLeft > queue[loop+1]->burstLeft||(queue[loop]->burstLeft == queue[loop+1]->burstLeft&&queue[loop]->burst > queue[loop+1]->burst)){ //if current is larger than next number
+
+                        queue[size] = queue[loop];
+                        queue[loop] = queue[loop+1];
+                        queue[loop+1] = queue[size]; //bubble sort queue pointer
+                        queue[size] = NULL; //set temp pointer to NULL
+                        sortFlag = 1;
+                    }
                 }
-
-                if (queue[loop]->burstLeft > queue[loop+1]->burstLeft){ //if current is larger than next number
-
-                    queue[size] = queue[loop];
-                    queue[loop] = queue[loop+1];
-                    queue[loop+1] = queue[size]; //bubble sort queue pointer
-                    queue[size] = NULL; //set temp pointer to NULL
-                }
-            }
+            }while(sortFlag);
         }
 
         if(queue[0]!=NULL&&!(lockFlag)){ //if process is in queue and not same loop
@@ -233,20 +238,25 @@ int main(void) {
 
         if(mode == '0'){ //preemptive
 
-            for(loop=0;loop<size;loop++){ //for preemptive loop = 0, non-preemptive loop = 1
+            do{
+                sortFlag = 0;
 
-                if(queue[loop]==NULL||queue[loop+1]==NULL){ //if there are null pointers, break so no dereferencing occurs and causes error
-                    break; //break
+                for(loop=0;loop<size;loop++){ //for preemptive loop = 0, non-preemptive loop = 1
+
+                    if(queue[loop]==NULL||queue[loop+1]==NULL){ //if there are null pointers, break so no dereferencing occurs and causes error
+                        break; //break
+                    }
+
+                    if (queue[loop]->burstLeft > queue[loop+1]->burstLeft||(queue[loop]->burstLeft == queue[loop+1]->burstLeft&&queue[loop]->burst > queue[loop+1]->burst)){ //if current is larger than next number
+
+                        queue[size] = queue[loop];
+                        queue[loop] = queue[loop+1];
+                        queue[loop+1] = queue[size]; //bubble sort queue pointer
+                        queue[size] = NULL; //set temp pointer to NULL
+                        sortFlag = 1;
+                    }
                 }
-
-                if (queue[loop]->burstLeft > queue[loop+1]->burstLeft){ //if current is larger than next number
-
-                    queue[size] = queue[loop];
-                    queue[loop] = queue[loop+1];
-                    queue[loop+1] = queue[size]; //bubble sort queue pointer
-                    queue[size] = NULL; //set temp pointer to NULL
-                }
-            }
+            }while(sortFlag);
         }
 
         breakFlag = 0; //break flag
