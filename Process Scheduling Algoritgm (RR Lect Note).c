@@ -191,7 +191,8 @@ int main(void) {
                 temp->burstLeft -= temp->burstLeft;
                 temp->completionTime = systemClock;
                 temp->turnaroundTime = temp->completionTime;
-                temp->waitingTime = temp->turnaroundTime - temp->burst;              systemClock += delay;
+                temp->waitingTime = temp->turnaroundTime - temp->burst;              
+                systemClock += delay;
                 flag++;
             }
         }
