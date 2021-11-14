@@ -117,9 +117,9 @@ int main(void) {
 
     //return 0;
 
-    while (!(mode == '1' || mode == '2' || mode == '3' || mode == '0')) {
-        printf("Please enter a value between 0 to 3.\n");
-        printf("Please select one of the scheduling algorithm that you wish to use.\n 0. Shortest Job First (SJF) Preemptive. \n 1. Shortest Job First (SJF) Non-Preemptive Version. \n 2. Round Robin (RR) with Overhead. \n 3. Round Robin (RR) without Overhead.\n");
+    while (!(mode == '1' || mode == '2' || mode == '3' || mode == '0' || mode == '4' || mode == '5')) {
+        printf("Please enter a value between 0 to 5.\n");
+        printf("Please select one of the scheduling algorithm that you wish to use.\n 0. Shortest Job First (SJF) Preemptive. \n 1. Shortest Job First (SJF) Non-Preemptive Version. \n 2. Round Robin (RR) with Overhead. \n 3. Round Robin (RR) without Overhead.\n 4. Round Robin+ with Overhead. \n 5.Round Robin+ without Overhead. \n");
 
         scanf(" %c", &mode);
     }
@@ -232,10 +232,6 @@ int main(void) {
             }
         }
 
-        if (lockFlag) { //prevent same loop running
-            lockFlag = 0;
-        }
-
         if (mode == '0') { //preemptive
 
             do {
@@ -256,6 +252,10 @@ int main(void) {
                     }
                 }
             } while (sortFlag);
+        }
+
+        if (lockFlag) { //prevent same loop running
+            lockFlag = 0;
         }
 
         breakFlag = 0; //break flag
