@@ -124,7 +124,7 @@ int main(void) {
         scanf(" %c", &mode);
     }
 
-    int sortFlag, systemClock = 0, hold, count = 0, breakFlag = 1, loop, lockFlag, size = 0, moveFlag=0;
+    int sortFlag, systemClock = 0, hold, count = 0, breakFlag = 1, loop, lockFlag, size = 0;
     char nameHold[100];
     nodePtr temp, lPtr = NULL;
 
@@ -238,7 +238,7 @@ int main(void) {
 
         if(mode == '0'){ //preemptive
 
-            do{
+             do{
                 sortFlag = 0;
 
                 for(loop=0;loop<size;loop++){ //start from first node
@@ -249,32 +249,16 @@ int main(void) {
 
                     if (queue[loop]->burstLeft > queue[loop+1]->burstLeft){ //if current is larger than next number
 
-                        if(queue[0]->burstLeft > queue[1]->burstLeft){ //if first node is ever moved
-                            moveFlag = 1; //set move flag
-                        }
-
                         queue[size] = queue[loop];
                         queue[loop] = queue[loop+1];
                         queue[loop+1] = queue[size]; //bubble sort queue pointer
                         queue[size] = NULL; //set temp pointer to NULL
                         sortFlag = 1;
                     }
-                    else if(queue[loop]->burstLeft == queue[loop+1]->burstLeft){ //if burst time left equal
-
-                        if(moveFlag&&queue[loop]->arrivalTime < queue[loop+1]->arrivalTime){ //if first node moved, sort by latest arrival time
-
-                            queue[size] = queue[loop];
-                            queue[loop] = queue[loop+1];
-                            queue[loop+1] = queue[size]; //bubble sort queue pointer
-                            queue[size] = NULL; //set temp pointer to NULL
-                            sortFlag = 1;
-                        }
-                    }
                 }
             }while(sortFlag);
         }
 
-        moveFlag = 0; //reset move flag
         breakFlag = 0; //break flag
 
         for (temp = sPtr; temp != NULL; temp = temp->next) { //if all processes ended
