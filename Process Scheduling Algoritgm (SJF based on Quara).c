@@ -165,6 +165,9 @@ int main(void) {
     nodePtr* queue; //array of pointers
     queue = malloc(sizeof(*queue) * (size + 2)); //get space
 
+    node* save;
+    save = malloc(sizeof(node) * size);
+
     for (loop = 0; loop < (size + 2); loop++) { //get one more extra space
         queue[loop] = NULL; //set null
     }
@@ -268,8 +271,22 @@ int main(void) {
         }
     }
 
-    for (temp = sPtr; temp != NULL; temp = temp->next) { //print out all information
-        printf("%s , %d , %d : %d %d %d %d\n", temp->job_name, temp->arrivalTime, temp->burst, temp->burstLeft, temp->completionTime, temp->turnaroundTime, temp->waitingTime);
+    temp = sPtr;
+
+    for (loop = 0; loop < size; loop++) {
+        strcpy(save[loop].job_name, temp->job_name);
+        save[loop].arrivalTime = temp->arrivalTime;
+        save[loop].burst = temp->burst;
+        save[loop].burstLeft = temp->burstLeft;
+        save[loop].completionTime = temp->completionTime;
+        save[loop].turnaroundTime = temp->turnaroundTime;
+        save[loop].waitingTime = temp->waitingTime;
+
+        temp = temp->next;
+    }
+
+    for (int i = 0; i < size; i++) { //print out all information
+        printf("%s , %d , %d : %d %d %d %d\n", save[i].job_name, save[i].arrivalTime, save[i].burst, save[i].burstLeft, save[i].completionTime, save[i].turnaroundTime, save[i].waitingTime);
     }
 
     return 0;
