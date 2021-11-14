@@ -131,7 +131,7 @@ int main(void) {
     }
 
     nodePtr temp, lPtr = NULL;
-    int FinalsortFlag, hold, sortFlag, timeQuantum = 0, delayOverhead = 0;
+    int FinalsortFlag, hold, sortFlag, timeQuantum = 0, delayOverhead = 0, size;
     char nameHold[100];
 
     do { //sort processes according to arrival time
@@ -168,6 +168,8 @@ int main(void) {
         scanf("%d", &delayOverhead); //get overhead
     }
 
+    node* save;
+
     for (int i = 0; i < 6; i++) {
         int systemClock = 0, count = 0, breakFlag = 1, loop, timeLeft, lockFlag, delayFlag = 0, delayTime, size = 0, doneFlag, flag, sortFlag = 0, delay = 0;
 
@@ -178,6 +180,9 @@ int main(void) {
             temp->burstLeft = temp->burst;
             size++; //get size of list
         }
+
+        if (i == 0)
+            save = malloc(sizeof(node) * size * 6);
 
         if (i == 0 || i == 1 || i == 4 || i == 5) {
             nodePtr* queue; //array of pointers
@@ -378,59 +383,23 @@ int main(void) {
                 }
             } while (doneFlag); //flag to continue loop
         }
-    }
-    printf("Do you want the output sorted based on completition time?\n");
-    char sortOutput;
-    do {
-        printf("Please enter 'y' or 'n'\n");
-        scanf(" %c", &sortOutput);
-    } while (!(sortOutput == 'y' || sortOutput == 'n'));
 
-    printf("\n");
+        for (int x = size * i; x < size * (i + 1); x++) {
+            strcpy(save[x].job_name, temp->job_name);
+            strcpy(save[x].job_name, temp->job_name);
+            save[x].arrivalTime = temp->arrivalTime;
+            save[x].burst = temp->burst;
+            save[x].burstLeft = temp->burstLeft;
+            save[x].completionTime = temp->completionTime;
+            save[x].turnaroundTime = temp->turnaroundTime;
+            save[x].waitingTime = temp->waitingTime;
 
-    if (sortOutput == 'y') {
-        do { //sort processes according to arrival time
-            FinalsortFlag = 0; //sort flag
-            temp = sPtr;
-            lPtr = NULL;
-
-
-            while (temp->next != lPtr) {
-
-                if (temp->completionTime > (temp->next)->completionTime) {
-
-                    strcpy(nameHold, temp->job_name);
-                    strcpy(temp->job_name, (temp->next)->job_name);
-                    strcpy((temp->next)->job_name, nameHold); //bubble sort job name
-                    hold = temp->arrivalTime;
-                    temp->arrivalTime = (temp->next)->arrivalTime;
-                    (temp->next)->arrivalTime = hold; //bubble sort arrival time
-                    hold = temp->burst;
-                    temp->burst = (temp->next)->burst;
-                    (temp->next)->burst = hold; //bubble sort burst time
-                    hold = temp->completionTime;
-                    temp->completionTime = (temp->next)->completionTime;
-                    (temp->next)->completionTime = hold; //bubble sort completion time
-                    hold = temp->turnaroundTime;
-                    temp->turnaroundTime = (temp->next)->turnaroundTime;
-                    (temp->next)->turnaroundTime = hold; //bubble sort turnaround time
-                    hold = temp->waitingTime;
-                    temp->waitingTime = (temp->next)->waitingTime;
-                    (temp->next)->waitingTime = hold; //bubble sort waiting time
-
-                    FinalsortFlag = 1;
-                }
-                temp = temp->next;
-            }
-            lPtr = temp;
-        } while (FinalsortFlag);
-        printf("\nList of jobs (Sorted based on Completion Time.)\n");
+            temp = temp->next;
+        }
     }
 
-    if (sortOutput == 'n')
-        printf("List of jobs.\n");
-    for (temp = sPtr; temp != NULL; temp = temp->next) { //print out all information
-        printf("%s , %d , %d : %d %d %d %d\n", temp->job_name, temp->arrivalTime, temp->burst, temp->burstLeft, temp->completionTime, temp->turnaroundTime, temp->waitingTime);
+    for (int i = size * (mode - '0'); i < size * (mode - '0' + 1); i++) { //print out all information
+        printf("%s , %d , %d : %d %d %d %d\n", save[i].job_name, save[i].arrivalTime, save[i].burst, save[i].burstLeft, save[i].completionTime, save[i].turnaroundTime, save[i].waitingTime);
     }
 
     return 0;
