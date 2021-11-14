@@ -124,19 +124,9 @@ int main(void) {
         scanf(" %c", &mode);
     }
 
-    int sortFlag, systemClock = 0, timeQuantum, delay = 0, hold, count = 0, breakFlag = 1, loop, timeLeft, lockFlag, delayFlag = 0, delayTime, size = 0;
+    int sortFlag, systemClock = 0, hold, count = 0, breakFlag = 1, loop, lockFlag, size = 0;
     char nameHold[100];
     nodePtr temp, lPtr = NULL;
-
-    printf("Please input the time quantum.\n");
-    scanf("%d", &timeQuantum); //get time quantum
-
-    if (mode == '2') { //RR with overhead
-        while (delay == 0) { //make sure input is not 0
-            printf("Please input the time delay.\n");
-            scanf("%d", &delay); //get overhead
-        }
-    }
 
     if (sPtr == NULL) { //if list is empty, end program
         printf("No processes found\n");
@@ -179,9 +169,6 @@ int main(void) {
         queue[loop] = NULL; //set null
     }
 
-    timeLeft = timeQuantum; //set initial time
-    delayTime = delay; //set delay time
-
     for (systemClock = 0; breakFlag; systemClock++) { //system clock, ends when processes terminate
 
         for (temp = sPtr; temp != NULL; temp = temp->next) { //loop through list
@@ -205,20 +192,8 @@ int main(void) {
             }
         }
 
-        if (delayFlag) { //delay flag set
-
-            delayTime--; //minus delay time
-
-            if (delayTime == 0) { //if delay time finished
-                delayFlag = 0; //turn off delay flag
-            }
-
-            continue; //go to next loop without processing
-        }
-
         if (queue[0] != NULL && !(lockFlag)) { //if process is in queue and not same loop
 
-            timeLeft--; //minus time
             queue[0]->burstLeft--; //minus burst
 
             if (queue[0]->burstLeft == 0) { //if process completes
@@ -231,40 +206,26 @@ int main(void) {
                     queue[loop] = queue[loop + 1]; //move jobs to the front
                     queue[loop + 1] = NULL; //set last queue as NULL
                 }
-
-                timeLeft = timeQuantum; //reset time
-
-                if (queue[0] != NULL && mode == '2') { //if there is still a job and correct mode
-                    delayFlag = 1; //set delay flag
-                    delayTime = delay; //reset delay time
-                }
-            }
-            else if (timeLeft == 0) { //if time finishes
-
-                for (loop = 0; loop < (size + 1); loop++) { //loop through queue
-
-                    if (queue[loop] == NULL) { //find empty node
-                        queue[loop] = queue[0]; //fill empty node
-                        break;
-                    }
-                }
-
-                for (loop = 0; loop < size; loop++) { //loop through queue
-                    queue[loop] = queue[loop + 1]; //move jobs to the front
-                    queue[loop + 1] = NULL; //set last queue as NULL
-                }
-
-                timeLeft = timeQuantum; //reset time
-
-                if (queue[0] != NULL && mode == '2') { //if there is still a job and correct mode
-                    delayFlag = 1; //set delay flag
-                    delayTime = delay; //reset delay time
-                }
             }
         }
 
         if (lockFlag) { //prevent same loop running
             lockFlag = 0;
+        }
+
+        for (loop = 0; loop < size; loop++) { //for preemptive loop = 0, non-preemptive loop = 1
+
+            if (queue[loop] == NULL || queue[loop + 1] == NULL) { //if there are null pointers, break so no dereferencing occurs and causes error
+                break; //break
+            }
+
+            if (queue[loop]->burstLeft > queue[loop + 1]->burstLeft) { //if current is larger than next number
+
+                queue[size] = queue[loop];
+                queue[loop] = queue[loop + 1];
+                queue[loop + 1] = queue[size]; //bubble sort queue pointer
+                queue[size] = NULL; //set temp pointer to NULL
+            }
         }
 
         breakFlag = 0; //break flag
