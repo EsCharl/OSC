@@ -164,7 +164,7 @@ int main(void){
     queue = malloc(sizeof(*queue) * (size + 2)); //get space for queue
 
     node *save; //array of structs
-    save = malloc(sizeof(node)*size); //get space to save array results
+    save = malloc(sizeof(node)*4*size); //get space to save array results, 4 is for 4 algorithms
 
     for(loop=0;loop<(size+2);loop++){ //get one more extra space
         queue[loop] = NULL; //set null
@@ -272,7 +272,7 @@ int main(void){
 
   temp = sPtr; //reset pointer
 
-  for(loop=0;loop<size;loop++){ //loop through save array
+  for(loop=size*(mode-'0');loop<size*(1+(mode-'0'));loop++){ //loop through save array
 
         strcpy(save[loop].job_name,temp->job_name);
         save[loop].arrivalTime = temp->arrivalTime;
@@ -285,7 +285,7 @@ int main(void){
         temp = temp->next;
     }
 
-    for(loop=0;loop<size;loop++){ //print out information from loop
+    for(loop=size*(mode-'0');loop<size*(1+(mode-'0'));loop++){ //print out information from loop
         printf("%s , %d , %d : %d %d %d %d\n",save[loop].job_name,save[loop].arrivalTime,save[loop].burst,save[loop].burstLeft,save[loop].completionTime,save[loop].turnaroundTime,save[loop].waitingTime);
     }
 
