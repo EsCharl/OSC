@@ -411,10 +411,10 @@ int main(void) {
 
         int sumWaitTime = 0, sumTurnaroundTime = 0;
 
-        printf("%-15s | %-3s | %-3s : %-6s | %-6s | %-6s | %-6s\n", "Job Name", "A.T", "B.T", "B.T.L", "C.T", "T.A.T", "W.T");
+        printf("%-15s | %-3s | %-3s : %-6s | %-6s | %-6s\n", "Job Name", "A.T", "B.T", "C.T", "T.A.T", "W.T");
 
         for (loop = size * mode; loop < size * (mode + 1); loop++) { //print out information from loop
-            printf("%-15s | %-3d | %-3d : %-6d | %-6d | %-6d | %-6d\n", save[loop].job_name, save[loop].arrivalTime, save[loop].burst, save[loop].burstLeft, save[loop].completionTime, save[loop].turnaroundTime, save[loop].waitingTime);
+            printf("%-15s | %-3d | %-3d : %-6d | %-6d | %-6d\n", save[loop].job_name, save[loop].arrivalTime, save[loop].burst, save[loop].completionTime, save[loop].turnaroundTime, save[loop].waitingTime);
 
             sumWaitTime += save[loop].waitingTime;
             sumTurnaroundTime += save[loop].turnaroundTime;
@@ -428,7 +428,7 @@ int main(void) {
         printf("\n"); //get extra line
 
     }
-    printf("A.T = Arrival Time.\nB.T = Burst Time\nB.T.L = Burst Time Left.\nC.T = Complete Time.\nT.A.T = Turnaround Time.\nW.T = Wait Time\n");
+    printf("A.T = Arrival Time.\nB.T = Burst Time\nC.T = Complete Time.\nT.A.T = Turnaround Time.\nW.T = Wait Time\n");
 
     printf("you've selected : %c. ", selection);
     switch (selection) {
@@ -581,7 +581,7 @@ int main(void) {
         scanf(" %c", &quit);
     }
 
-    printf("Thanks for using the Chew Language Scheduling Algorithm Program");
+    printf("Thanks for using the Chew Language Scheduling Algorithm Program.\n");
     sleep(5);
 
     return 0;
