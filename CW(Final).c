@@ -185,9 +185,9 @@ int main(void) {
 
     for (mode = 0; mode < 6; mode++) { //loop through all modes
 
-        for (temp = sPtr; temp != NULL; temp = temp->next) { //copy burst time to burst time left
-            temp->burstLeft = temp->burst;
-            temp->waitingTimeSelected = 0;
+        for (temp = sPtr; temp != NULL; temp = temp->next) { //loop through list
+            temp->burstLeft = temp->burst; //copy burst time to burst time left
+            temp->waitingTimeSelected = 0; //reset first time processing flag
         }
 
         if (mode == 4 || mode == 5) { //for RR without arrival time
@@ -197,7 +197,7 @@ int main(void) {
             }
         }
 
-        for (loop = 0; loop < (size + 2); loop++) { //get one more extra space
+        for (loop = 0; loop < (size + 2); loop++) { //get two more extra space for queueing and sorting
             queue[loop] = NULL; //set null
         }
 
@@ -275,9 +275,9 @@ int main(void) {
                 }
 
                 queue[0]->burstLeft--; //minus burst
-                if (queue[0]->waitingTimeSelected == 0) {
-                    queue[0]->waitingTimeSelected = 1;
-                    queue[0]->waitingTime = systemClock - 1;
+                if (queue[0]->waitingTimeSelected == 0) { //flag to check first time enter queue
+                    queue[0]->waitingTimeSelected = 1; //set flag
+                    queue[0]->waitingTime = (systemClock - 1) - queue[0]->arrivalTime; //systemClock - 1 because process is only processed on the next second
                 }
 
                 if (queue[0]->burstLeft == 0) { //if process completes
@@ -369,7 +369,6 @@ int main(void) {
 
             strcpy(save[loop].job_name, temp->job_name);
             save[loop].burst = temp->burst;
-            save[loop].burstLeft = temp->burstLeft;
             save[loop].completionTime = temp->completionTime;
             save[loop].turnaroundTime = temp->turnaroundTime;
             save[loop].waitingTime = temp->waitingTime;
