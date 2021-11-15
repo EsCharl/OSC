@@ -16,8 +16,8 @@ struct Job
 	int completionTime;
 	int turnaroundTime;
 	int waitingTime;
-	struct Job* next;
 	int waitingTimeSelected;
+	struct Job* next;
 };
 
 int main(void) {
@@ -341,6 +341,47 @@ int main(void) {
 		}
 
 		breakFlag = 1; //reset break flag;
+
+		do{ //sort processes according to completion time
+            sortFlag = 0; //sort flag
+            temp = sPtr;
+
+            while (temp->next != lPtr){
+
+                if (temp->completionTime > (temp->next)->completionTime){
+
+                    strcpy(nameHold,temp->job_name);
+                    strcpy(temp->job_name,(temp->next)->job_name);
+                    strcpy((temp->next)->job_name,nameHold); //bubble sort job name
+
+                    hold = temp->arrivalTime;
+                    temp->arrivalTime = (temp->next)->arrivalTime;
+                    (temp->next)->arrivalTime = hold; //bubble sort arrival time
+
+                    hold = temp->burst;
+                    temp->burst = (temp->next)->burst;
+                    (temp->next)->burst = hold; //bubble sort burst time
+
+                    hold = temp->completionTime;
+                    temp->completionTime = (temp->next)->completionTime;
+                    (temp->next)->completionTime = hold; //bubble sort completion time
+
+                    hold = temp->turnaroundTime;
+                    temp->turnaroundTime = (temp->next)->turnaroundTime;
+                    (temp->next)->turnaroundTime = hold; //bubble sort turnaround time
+
+                    hold = temp->waitingTime;
+                    temp->waitingTime = (temp->next)->waitingTime;
+                    (temp->next)->waitingTime = hold; //bubble sort waiting time
+
+                    sortFlag = 1;
+                }
+                temp = temp->next;
+            }
+            lPtr = temp;
+        }while (sortFlag);
+
+        lPtr = NULL; //reset pointer
 		temp = sPtr; //reset pointer
 
 		for (loop = size * mode; loop < size * (mode + 1); loop++) { //loop through save array
