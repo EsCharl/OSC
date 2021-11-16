@@ -258,12 +258,22 @@ int main(void) {
 				}
 
 				queue[0]->burstLeft--; //minus burst
+
+				printf("-> %d [%s", systemClock - 1, queue[0]->job_name); //front part of queue
+
 				if (queue[0]->waitingTimeSelected == 0) { //flag to check first time enter queue
+                    printf("*"); //star to show first insertion
 					queue[0]->waitingTimeSelected = 1; //set flag
 					queue[0]->waitingTime = (systemClock - 1) - queue[0]->arrivalTime; //systemClock - 1 because process is only processed on the next second
 				}
 
-				printf("-> %d [%s(%d/%d)] %d ", systemClock - 1, queue[0]->job_name, (queue[0]->burst - queue[0]->burstLeft), queue[0]->burst, systemClock);
+				printf("(%d/%d)",(queue[0]->burst - queue[0]->burstLeft), queue[0]->burst); //middle part of queue
+
+				if (queue[0]->burstLeft == 0){
+                    printf("*"); //star to show process completed
+				}
+
+				printf("] %d ", systemClock); //last part of queue
 
 				if (queue[0]->burstLeft == 0) { //if process completes
 
