@@ -43,6 +43,7 @@ int main(void) {
 	nodePtr N;
 	nodePtr sPtr;
 	nodePtr cPtr;
+	nodePtr cleaner;
 
 	sPtr = malloc(sizeof(node));
 
@@ -225,14 +226,14 @@ int main(void) {
 
 			if (delayFlag && (mode == 2 || mode == 4)) { //delay flag set
 
-                if(delayTime == delay){
-                    printf("-> %d [DELAY] ", systemClock - 1);
-                }
+				if (delayTime == delay) {
+					printf("-> %d [DELAY] ", systemClock - 1);
+				}
 
 				delayTime--; //minus delay time
 
 				if (delayTime == 0) { //if delay time finished
-                    printf("%d ", systemClock);
+					printf("%d ", systemClock);
 					delayFlag = 0; //turn off delay flag
 				}
 
@@ -242,39 +243,39 @@ int main(void) {
 			if (mode == 1) { //non-preemptive
 
 				do { //sort processes according to burst time left
-                    sortFlag = 0; //sort flag
-                    loop = 1; //start from second node
+					sortFlag = 0; //sort flag
+					loop = 1; //start from second node
 
-                    while (queue[loop + 1] != lPtr) {
+					while (queue[loop + 1] != lPtr) {
 
-                        if (queue[loop]->burstLeft > queue[loop + 1]->burstLeft) {
+						if (queue[loop]->burstLeft > queue[loop + 1]->burstLeft) {
 
-                            queue[size] = queue[loop];
-                            queue[loop] = queue[loop + 1];
-                            queue[loop + 1] = queue[size]; //bubble sort queue pointer
-                            queue[size] = NULL; //set temp pointer to NULL
+							queue[size] = queue[loop];
+							queue[loop] = queue[loop + 1];
+							queue[loop + 1] = queue[size]; //bubble sort queue pointer
+							queue[size] = NULL; //set temp pointer to NULL
 
-                            sortFlag = 1;
-                        }
-                        loop++;
-                    }
-                    lPtr = queue[loop];
-                } while (sortFlag);
+							sortFlag = 1;
+						}
+						loop++;
+					}
+					lPtr = queue[loop];
+				} while (sortFlag);
 
-                lPtr = NULL; //reset pointer
+				lPtr = NULL; //reset pointer
 			}
 
 			if (queue[0] != NULL && !(lockFlag)) { //if process is in queue and not same loop
 
-                if(nullFlag == 1){ //close null loop
-                    printf("%d ", systemClock - 1);
-                    nullFlag = 0;
-                }
+				if (nullFlag == 1) { //close null loop
+					printf("%d ", systemClock - 1);
+					nullFlag = 0;
+				}
 
-                if (queue[0]->loadFlag == 0){
-                    printf("-> %d [%s", systemClock - 1, queue[0]->job_name); //front part of queue
-                    queue[0]->loadFlag = 1;
-                }
+				if (queue[0]->loadFlag == 0) {
+					printf("-> %d [%s", systemClock - 1, queue[0]->job_name); //front part of queue
+					queue[0]->loadFlag = 1;
+				}
 
 				if (mode == 2 || mode == 3 || mode == 4 || mode == 5) {
 					timeLeft--; //minus time
@@ -283,7 +284,7 @@ int main(void) {
 				queue[0]->burstLeft--; //minus burst
 
 				if (queue[0]->waitingTimeSelected == 0) { //flag to check first time enter queue
-                    printf("*"); //star to show first insertion
+					printf("*"); //star to show first insertion
 					queue[0]->waitingTimeSelected = 1; //set flag
 					queue[0]->waitingTime = (systemClock - 1) - queue[0]->arrivalTime; //systemClock - 1 because process is only processed on the next second
 					queue[0]->entryTime = systemClock - 1;
@@ -291,10 +292,10 @@ int main(void) {
 
 				if (queue[0]->burstLeft == 0) { //if process completes
 
-                    if (queue[0]->loadFlag == 1){
-                        printf("(%d/%d)*] %d ",(queue[0]->burst - queue[0]->burstLeft), queue[0]->burst, systemClock); //second part of queue
-                        queue[0]->loadFlag = 0;
-                    }
+					if (queue[0]->loadFlag == 1) {
+						printf("(%d/%d)*] %d ", (queue[0]->burst - queue[0]->burstLeft), queue[0]->burst, systemClock); //second part of queue
+						queue[0]->loadFlag = 0;
+					}
 
 					queue[0]->completionTime = systemClock; //get completion time from clock
 					queue[0]->turnaroundTime = (queue[0]->completionTime - queue[0]->arrivalTime); //get turnaround time from formula//get waiting time from formula
@@ -315,10 +316,10 @@ int main(void) {
 				}
 				else if (timeLeft == 0 && (mode == 2 || mode == 3 || mode == 4 || mode == 5)) { //if time finishes
 
-                    if (queue[0]->loadFlag == 1){
-                        printf("(%d/%d)] %d ",(queue[0]->burst - queue[0]->burstLeft), queue[0]->burst, systemClock); //second part of queue
-                        queue[0]->loadFlag = 0;
-                    }
+					if (queue[0]->loadFlag == 1) {
+						printf("(%d/%d)] %d ", (queue[0]->burst - queue[0]->burstLeft), queue[0]->burst, systemClock); //second part of queue
+						queue[0]->loadFlag = 0;
+					}
 
 					for (loop = 0; loop < (size + 1); loop++) { //loop through queue
 
@@ -343,12 +344,12 @@ int main(void) {
 					}
 				}
 			}
-			else if ((queue[0] == NULL||(queue[0] != NULL && lockFlag))&&systemClock != 0) {
+			else if ((queue[0] == NULL || (queue[0] != NULL && lockFlag)) && systemClock != 0) {
 
-                if(nullFlag == 0){
-                    printf("-> %d [NULL] ", systemClock - 1);
-                    nullFlag = 1;
-                }
+				if (nullFlag == 0) {
+					printf("-> %d [NULL] ", systemClock - 1);
+					nullFlag = 1;
+				}
 			}
 
 			if (lockFlag) { //prevent same loop running
@@ -358,31 +359,31 @@ int main(void) {
 			if (mode == 0) { //preemptive
 
 				do { //sort processes according to burst time left
-                    sortFlag = 0; //sort flag
-                    loop = 0; //start from first node
+					sortFlag = 0; //sort flag
+					loop = 0; //start from first node
 
-                    while (queue[loop + 1] != lPtr) {
+					while (queue[loop + 1] != lPtr) {
 
-                        if (queue[loop]->burstLeft > queue[loop + 1]->burstLeft) {
+						if (queue[loop]->burstLeft > queue[loop + 1]->burstLeft) {
 
-                            if (queue[0]->loadFlag == 1 && queue[0]->burstLeft > queue[1]->burstLeft){
-                                printf("(%d/%d)] %d ",(queue[0]->burst - queue[0]->burstLeft), queue[0]->burst, systemClock); //second part of queue
-                                queue[0]->loadFlag = 0;
-                            }
+							if (queue[0]->loadFlag == 1 && queue[0]->burstLeft > queue[1]->burstLeft) {
+								printf("(%d/%d)] %d ", (queue[0]->burst - queue[0]->burstLeft), queue[0]->burst, systemClock); //second part of queue
+								queue[0]->loadFlag = 0;
+							}
 
-                            queue[size] = queue[loop];
-                            queue[loop] = queue[loop + 1];
-                            queue[loop + 1] = queue[size]; //bubble sort queue pointer
-                            queue[size] = NULL; //set temp pointer to NULL
+							queue[size] = queue[loop];
+							queue[loop] = queue[loop + 1];
+							queue[loop + 1] = queue[size]; //bubble sort queue pointer
+							queue[size] = NULL; //set temp pointer to NULL
 
-                            sortFlag = 1;
-                        }
-                        loop++;
-                    }
-                    lPtr = queue[loop];
-                } while (sortFlag);
+							sortFlag = 1;
+						}
+						loop++;
+					}
+					lPtr = queue[loop];
+				} while (sortFlag);
 
-                lPtr = NULL; //reset pointer
+				lPtr = NULL; //reset pointer
 			}
 
 			breakFlag = 0; //break flag
@@ -549,6 +550,15 @@ int main(void) {
 
 		scanf(" %c", &quit);
 	}
+
+	while (sPtr != NULL) {
+		cleaner = sPtr;
+		sPtr = sPtr->next;
+		free(cleaner);
+	}
+
+	free(save);
+	free(queue);
 
 	printf("\nThanks for using the Chew Language Scheduling Algorithm Program.\n");
 	sleep(5);
