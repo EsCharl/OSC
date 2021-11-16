@@ -17,6 +17,7 @@ struct Job
 	int turnaroundTime;
 	int waitingTime;
 	int waitingTimeSelected;
+	int entryTime;
 	struct Job* next;
 };
 
@@ -75,6 +76,7 @@ int main(void) {
 			N->waitingTime = 0;
 			N->waitingTimeSelected = 0;
 			N->burstLeft = 0;
+			N->entryTime = 0;
 
 			printf("Would you like to add more jobs? (q to quit)\n");
 
@@ -112,6 +114,7 @@ int main(void) {
 				N->waitingTime = 0;
 				N->waitingTimeSelected = 0;
 				N->burstLeft = 0;
+				N->entryTime = 0;
 
 				if (!feof(read)) {
 					N->next = malloc(sizeof(node));
@@ -267,6 +270,7 @@ int main(void) {
                     printf("*"); //star to show first insertion
 					queue[0]->waitingTimeSelected = 1; //set flag
 					queue[0]->waitingTime = (systemClock - 1) - queue[0]->arrivalTime; //systemClock - 1 because process is only processed on the next second
+					queue[0]->entryTime = systemClock - 1;
 				}
 
 				printf("(%d/%d)",(queue[0]->burst - queue[0]->burstLeft), queue[0]->burst); //middle part of queue
@@ -409,7 +413,8 @@ int main(void) {
 			save[loop].completionTime = queue[hold]->completionTime;
 			save[loop].turnaroundTime = queue[hold]->turnaroundTime;
 			save[loop].waitingTime = queue[hold]->waitingTime;
-			save[loop].arrivalTime = queue[hold]->arrivalTime; //save using queue
+			save[loop].arrivalTime = queue[hold]->arrivalTime;
+			save[loop].entryTime = queue[hold]->entryTime; //save using queue
 
 			hold++;
 		}
@@ -423,16 +428,17 @@ int main(void) {
 			temp->completionTime = 0;
 			temp->turnaroundTime = 0;
 			temp->waitingTime = 0;
+			temp->entryTime = 0;
 		}
 
 		printf("\n\n%s\n", Jobs[mode]);
 
 		int sumWaitTime = 0, sumTurnaroundTime = 0;
 
-		printf("%-15s | %-3s | %-3s : %-6s | %-6s | %-6s\n", "Job Name", "A.T", "B.T", "C.T", "T.A.T", "W.T");
+		printf("%-15s | %-3s | %-3s : %-6s | %-6s | %-6s | %-6s\n", "Job Name", "A.T", "B.T", "E.T", "C.T", "T.A.T", "W.T");
 
 		for (loop = size * mode; loop < size * (mode + 1); loop++) { //print out information from loop
-			printf("%-15s | %-3d | %-3d : %-6d | %-6d | %-6d\n", save[loop].job_name, save[loop].arrivalTime, save[loop].burst, save[loop].completionTime, save[loop].turnaroundTime, save[loop].waitingTime);
+			printf("%-15s | %-3d | %-3d : %-6d | %-6d | %-6d | %-6d\n", save[loop].job_name, save[loop].arrivalTime, save[loop].burst, save[loop].entryTime, save[loop].completionTime, save[loop].turnaroundTime, save[loop].waitingTime);
 
 			sumWaitTime += save[loop].waitingTime;
 			sumTurnaroundTime += save[loop].turnaroundTime;
@@ -446,7 +452,7 @@ int main(void) {
 		printf("\n\n"); //get extra line
 
 	}
-	printf("A.T = Arrival Time.\nB.T = Burst Time\nC.T = Complete Time.\nT.A.T = Turnaround Time.\nW.T = Wait Time\n");
+	printf("A.T = Arrival Time\nB.T = Burst Time\nE.T = Entry Time\nC.T = Complete Time\nT.A.T = Turnaround Time\nW.T = Wait Time\n");
 
 	printf("you've selected : %c. %s\n", selection, Jobs[selection - '0']);
 
