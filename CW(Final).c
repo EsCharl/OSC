@@ -153,6 +153,8 @@ int main(void) {
 		return 0;
 	}
 
+	printf("\n\n");
+
 	for (temp = sPtr; temp != NULL; temp = temp->next) { //get size of list
 		size++;
 	}
@@ -219,7 +221,7 @@ int main(void) {
 				delayTime--; //minus delay time
 
 				if (delayTime == 0) { //if delay time finished
-                    printf("-> %d [DELAY] %d ",systemClock-1,systemClock);
+					printf("-> %d [DELAY] %d ", systemClock - 1, systemClock);
 					delayFlag = 0; //turn off delay flag
 				}
 
@@ -261,7 +263,7 @@ int main(void) {
 					queue[0]->waitingTime = (systemClock - 1) - queue[0]->arrivalTime; //systemClock - 1 because process is only processed on the next second
 				}
 
-				printf("-> %d [%s(%d/%d)] %d ",systemClock-1,queue[0]->job_name,(queue[0]->burst-queue[0]->burstLeft),queue[0]->burst,systemClock);
+				printf("-> %d [%s(%d/%d)] %d ", systemClock - 1, queue[0]->job_name, (queue[0]->burst - queue[0]->burstLeft), queue[0]->burst, systemClock);
 
 				if (queue[0]->burstLeft == 0) { //if process completes
 
@@ -307,8 +309,8 @@ int main(void) {
 					}
 				}
 			}
-			else if(queue[0] == NULL && systemClock != 0){
-                printf("-> %d [NULL] %d ",systemClock-1,systemClock);
+			else if (queue[0] == NULL && systemClock != 0) {
+				printf("-> %d [NULL] %d ", systemClock - 1, systemClock);
 			}
 
 			if (lockFlag) { //prevent same loop running
@@ -356,35 +358,35 @@ int main(void) {
 
 		temp = sPtr; //reset pointer
 
-		for (loop = 0; loop < size; loop++){
+		for (loop = 0; loop < size; loop++) {
 
-            queue[loop] = temp;
-            temp = temp->next;
+			queue[loop] = temp;
+			temp = temp->next;
 		}
 
-		do{ //sort processes according to completion time
-            sortFlag = 0; //sort flag
-            loop = 0;
+		do { //sort processes according to completion time
+			sortFlag = 0; //sort flag
+			loop = 0;
 
-            while (queue[loop+1] != lPtr){
+			while (queue[loop + 1] != lPtr) {
 
-                if (queue[loop]->completionTime > queue[loop+1]->completionTime){
+				if (queue[loop]->completionTime > queue[loop + 1]->completionTime) {
 
-                    queue[size] = queue[loop];
-                    queue[loop] = queue[loop + 1];
-                    queue[loop + 1] = queue[size]; //bubble sort queue pointer
-                    queue[size] = NULL; //set temp pointer to NULL
+					queue[size] = queue[loop];
+					queue[loop] = queue[loop + 1];
+					queue[loop + 1] = queue[size]; //bubble sort queue pointer
+					queue[size] = NULL; //set temp pointer to NULL
 
-                    sortFlag = 1;
-                }
-                loop++;
-            }
-            lPtr = queue[loop];
-        }while (sortFlag);
+					sortFlag = 1;
+				}
+				loop++;
+			}
+			lPtr = queue[loop];
+		} while (sortFlag);
 
-        lPtr = NULL; //reset pointer
+		lPtr = NULL; //reset pointer
 
-        hold = 0; //temp
+		hold = 0; //temp
 
 		for (loop = size * mode; loop < size * (mode + 1); loop++) { //loop through save array
 
@@ -427,7 +429,7 @@ int main(void) {
 
 		printf("Average Turnaround time: %0.3f | Average Waiting Time: %0.3f\n", avgTurnaroundTime[mode], avgWaitTime[mode]);
 
-		printf("\n"); //get extra line
+		printf("\n\n"); //get extra line
 
 	}
 	printf("A.T = Arrival Time.\nB.T = Burst Time\nC.T = Complete Time.\nT.A.T = Turnaround Time.\nW.T = Wait Time\n");
