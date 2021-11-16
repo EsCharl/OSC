@@ -292,7 +292,7 @@ int main(void) {
 				if (queue[0]->burstLeft == 0) { //if process completes
 
                     if (queue[0]->loadFlag == 1){
-                        printf("(%d/%d)*] %d",(queue[0]->burst - queue[0]->burstLeft), queue[0]->burst, systemClock); //second part of queue
+                        printf("(%d/%d)*] %d ",(queue[0]->burst - queue[0]->burstLeft), queue[0]->burst, systemClock); //second part of queue
                         queue[0]->loadFlag = 0;
                     }
 
@@ -316,7 +316,7 @@ int main(void) {
 				else if (timeLeft == 0 && (mode == 2 || mode == 3 || mode == 4 || mode == 5)) { //if time finishes
 
                     if (queue[0]->loadFlag == 1){
-                        printf("(%d/%d)] %d",(queue[0]->burst - queue[0]->burstLeft), queue[0]->burst, systemClock); //second part of queue
+                        printf("(%d/%d)] %d ",(queue[0]->burst - queue[0]->burstLeft), queue[0]->burst, systemClock); //second part of queue
                         queue[0]->loadFlag = 0;
                     }
 
@@ -366,7 +366,7 @@ int main(void) {
                         if (queue[loop]->burstLeft > queue[loop + 1]->burstLeft) {
 
                             if (queue[0]->loadFlag == 1 && queue[0]->burstLeft > queue[1]->burstLeft){
-                                printf("(%d/%d)] %d",(queue[0]->burst - queue[0]->burstLeft), queue[0]->burst, systemClock); //second part of queue
+                                printf("(%d/%d)] %d ",(queue[0]->burst - queue[0]->burstLeft), queue[0]->burst, systemClock); //second part of queue
                                 queue[0]->loadFlag = 0;
                             }
 
