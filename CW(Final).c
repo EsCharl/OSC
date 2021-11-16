@@ -137,7 +137,7 @@ int main(void) {
 		scanf(" %c", &selection);
 	}
 
-	int sortFlag, systemClock = 0, hold, count = 0, breakFlag = 1, loop, lockFlag, size = 0, delayFlag = 0, delayTime, delay = 0, timeLeft, timeQuantum = 0;
+	int sortFlag, systemClock = 0, hold, count = 0, breakFlag = 1, loop, lockFlag, size = 0, delayFlag = 0, delayTime, delay = 0, timeLeft, timeQuantum = 0, nullFlag = 0;
 	char nameHold[100];
 	nodePtr temp, lPtr = NULL, compare;
 
@@ -221,10 +221,14 @@ int main(void) {
 
 			if (delayFlag && (mode == 2 || mode == 4)) { //delay flag set
 
+                if(delayTime == delay){
+                    printf("-> %d [DELAY] ", systemClock - 1);
+                }
+
 				delayTime--; //minus delay time
 
 				if (delayTime == 0) { //if delay time finished
-					printf("-> %d [DELAY] %d ", systemClock - 1, systemClock);
+                    printf("%d ", systemClock);
 					delayFlag = 0; //turn off delay flag
 				}
 
@@ -257,6 +261,11 @@ int main(void) {
 			}
 
 			if (queue[0] != NULL && !(lockFlag)) { //if process is in queue and not same loop
+
+                if(nullFlag == 1){
+                    printf("%d ", systemClock - 1);
+                    nullFlag = 0;
+                }
 
 				if (mode == 2 || mode == 3 || mode == 4 || mode == 5) {
 					timeLeft--; //minus time
@@ -326,7 +335,11 @@ int main(void) {
 				}
 			}
 			else if ((queue[0] == NULL||(queue[0] != NULL && lockFlag))&&systemClock != 0) {
-				printf("-> %d [NULL] %d ", systemClock - 1, systemClock);
+
+                if(nullFlag == 0){
+                    printf("-> %d [NULL] ", systemClock - 1);
+                    nullFlag = 1;
+                }
 			}
 
 			if (lockFlag) { //prevent same loop running
