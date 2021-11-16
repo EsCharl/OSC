@@ -16,8 +16,8 @@ struct Job
 	int completionTime;
 	int turnaroundTime;
 	int waitingTime;
-	struct Job* next;
 	int waitingTimeSelected;
+	struct Job* next;
 };
 
 int main(void) {
@@ -73,6 +73,7 @@ int main(void) {
 			N->completionTime = 0;
 			N->turnaroundTime = 0;
 			N->waitingTime = 0;
+			N->waitingTimeSelected = 0;
 			N->burstLeft = 0;
 
 			printf("Would you like to add more jobs? (q to quit)\n");
@@ -109,6 +110,7 @@ int main(void) {
 				N->completionTime = 0;
 				N->turnaroundTime = 0;
 				N->waitingTime = 0;
+				N->waitingTimeSelected = 0;
 				N->burstLeft = 0;
 
 				if (!feof(read)) {
@@ -341,18 +343,57 @@ int main(void) {
 		}
 
 		breakFlag = 1; //reset break flag;
+
+		for (loop = 0; loop < (size + 2); loop++) { //reset queue
+			queue[loop] = NULL; //set null
+		}
+
 		temp = sPtr; //reset pointer
+
+		for (loop = 0; loop < size; loop++){
+
+            queue[loop] = temp;
+            temp = temp->next;
+		}
+
+		do{ //sort processes according to completion time
+            sortFlag = 0; //sort flag
+            loop = 0;
+
+            while (queue[loop+1] != lPtr){
+
+                if (queue[loop]->completionTime > queue[loop+1]->completionTime){
+
+                    queue[size] = queue[loop];
+                    queue[loop] = queue[loop + 1];
+                    queue[loop + 1] = queue[size]; //bubble sort queue pointer
+                    queue[size] = NULL; //set temp pointer to NULL
+
+                    sortFlag = 1;
+                }
+                loop++;
+            }
+            lPtr = queue[loop];
+        }while (sortFlag);
+
+        lPtr = NULL; //reset pointer
+
+        hold = 0; //temp
 
 		for (loop = size * mode; loop < size * (mode + 1); loop++) { //loop through save array
 
-			strcpy(save[loop].job_name, temp->job_name);
-			save[loop].burst = temp->burst;
-			save[loop].completionTime = temp->completionTime;
-			save[loop].turnaroundTime = temp->turnaroundTime;
-			save[loop].waitingTime = temp->waitingTime;
-			save[loop].arrivalTime = temp->arrivalTime;
+			strcpy(save[loop].job_name, queue[hold]->job_name);
+			save[loop].burst = queue[hold]->burst;
+			save[loop].completionTime = queue[hold]->completionTime;
+			save[loop].turnaroundTime = queue[hold]->turnaroundTime;
+			save[loop].waitingTime = queue[hold]->waitingTime;
+			save[loop].arrivalTime = queue[hold]->arrivalTime; //save using queue
 
-			temp = temp->next;
+			hold++;
+		}
+
+		for (loop = 0; loop < (size + 2); loop++) { //reset queue
+			queue[loop] = NULL; //set null
 		}
 
 		for (temp = sPtr; temp != NULL; temp = temp->next) { //reset statistics
