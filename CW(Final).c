@@ -309,7 +309,7 @@ int main(void) {
 					}
 				}
 			}
-			else if (queue[0] == NULL && systemClock != 0) {
+			else if ((queue[0] == NULL||(queue[0] != NULL && lockFlag))&&systemClock != 0) {
 				printf("-> %d [NULL] %d ", systemClock - 1, systemClock);
 			}
 
