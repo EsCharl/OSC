@@ -219,6 +219,7 @@ int main(void) {
 				delayTime--; //minus delay time
 
 				if (delayTime == 0) { //if delay time finished
+                    printf("-> %d [DELAY] %d ",systemClock-1,systemClock);
 					delayFlag = 0; //turn off delay flag
 				}
 
@@ -259,6 +260,8 @@ int main(void) {
 					queue[0]->waitingTimeSelected = 1; //set flag
 					queue[0]->waitingTime = (systemClock - 1) - queue[0]->arrivalTime; //systemClock - 1 because process is only processed on the next second
 				}
+
+				printf("-> %d [%s(%d/%d)] %d ",systemClock-1,queue[0]->job_name,(queue[0]->burst-queue[0]->burstLeft),queue[0]->burst,systemClock);
 
 				if (queue[0]->burstLeft == 0) { //if process completes
 
@@ -303,6 +306,9 @@ int main(void) {
 						delayTime = delay; //reset delay time
 					}
 				}
+			}
+			else if(queue[0] == NULL && systemClock != 0){
+                printf("-> %d [NULL] %d ",systemClock-1,systemClock);
 			}
 
 			if (lockFlag) { //prevent same loop running
@@ -403,7 +409,7 @@ int main(void) {
 			temp->waitingTime = 0;
 		}
 
-		printf("%s\n", Jobs[mode]);
+		printf("\n\n%s\n", Jobs[mode]);
 
 		int sumWaitTime = 0, sumTurnaroundTime = 0;
 
