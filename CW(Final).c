@@ -151,30 +151,6 @@ int main(void) {
 		return 0;
 	}
 
-	do { //sort processes according to arrival time
-		sortFlag = 0; //sort flag
-		temp = sPtr;
-
-		while (temp->next != lPtr) {
-
-			if (temp->arrivalTime > (temp->next)->arrivalTime) {
-
-				strcpy(nameHold, temp->job_name);
-				strcpy(temp->job_name, (temp->next)->job_name);
-				strcpy((temp->next)->job_name, nameHold); //bubble sort job name
-				hold = temp->arrivalTime;
-				temp->arrivalTime = (temp->next)->arrivalTime;
-				(temp->next)->arrivalTime = hold; //bubble sort arrival time
-				hold = temp->burst;
-				temp->burst = (temp->next)->burst;
-				(temp->next)->burst = hold; //bubble sort burst time
-				sortFlag = 1;
-			}
-			temp = temp->next;
-		}
-		lPtr = temp;
-	} while (sortFlag);
-
 	for (temp = sPtr; temp != NULL; temp = temp->next) { //get size of list
 		size++;
 	}
