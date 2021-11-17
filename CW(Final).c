@@ -42,13 +42,11 @@ int main(void) {
 
 	nodePtr N;
 	nodePtr sPtr;
-	nodePtr cPtr;
 	nodePtr cleaner;
 
 	sPtr = malloc(sizeof(node));
 
 	N = sPtr;
-	cPtr = sPtr;
 
 	FILE* read;
 
