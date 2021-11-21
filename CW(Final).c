@@ -132,16 +132,8 @@ int main(void) {
 
 	//return 0;
 
-	while (!(selection == '1' || selection == '2' || selection == '3' || selection == '0' || selection == '4' || selection == '5')) {
-		printf("\nPlease enter a value between 0 to 5.\n");
-		printf("Please select one of the scheduling algorithm that you think will be the most suited given the workload given.\n 0. Shortest Job First (SJF) Preemptive Version. \n 1. Shortest Job First (SJF) Non-Preemptive Version. \n 2. Round Robin (RR) with Overhead. \n 3. Round Robin (RR) without Overhead.\n 4. Round Robin (RR) with Overhead without Arrival Time. \n 5. Round Robin (RR) without Overhead without Arrival Time.\n");
-
-		scanf(" %c", &selection);
-	}
-
 	int sortFlag, systemClock = 0, hold, count = 0, breakFlag = 1, loop, lockFlag, size = 0, delayFlag = 0, delayTime, delay = 0, timeLeft, timeQuantum = 0, nullFlag = 0;
 	char nameHold[100];
-	nodePtr temp, lPtr = NULL, compare;
 
 	while (timeQuantum == 0) {
 		printf("\nPlease input the time quantum.\n");
@@ -152,6 +144,18 @@ int main(void) {
 		printf("Please input the time delay.\n");
 		scanf("%d", &delay); //get overhead
 	}
+
+	while (!(selection == '1' || selection == '2' || selection == '3' || selection == '0' || selection == '4' || selection == '5')) {
+		printf("\nPlease enter a value between 0 to 5.\n");
+		printf("Please select one of the scheduling algorithm that you think will be the most suited given the workload given.\n 0. Shortest Job First (SJF) Preemptive Version. \n 1. Shortest Job First (SJF) Non-Preemptive Version. \n 2. Round Robin (RR) with Overhead. \n 3. Round Robin (RR) without Overhead.\n 4. Round Robin (RR) with Overhead without Arrival Time. \n 5. Round Robin (RR) without Overhead without Arrival Time.\n");
+
+		scanf(" %c", &selection);
+	}
+
+
+	nodePtr temp, lPtr = NULL, compare;
+
+
 
 	if (sPtr == NULL) { //if list is empty, end program
 		printf("No processes found\n");
@@ -172,6 +176,8 @@ int main(void) {
 
 	for (mode = 0; mode < 6; mode++) { //loop through all modes
 
+
+		//reset variables
 		for (temp = sPtr; temp != NULL; temp = temp->next) { //loop through list
 			temp->burstLeft = temp->burst; //copy burst time to burst time left
 			temp->waitingTimeSelected = 0; //reset first time processing flag
@@ -499,14 +505,14 @@ int main(void) {
 	printf("\n");
 
 	if (avgWaitTime[lowestAvgWaitingTimeIndex] == avgWaitTime[selection - '0'] || avgTurnaroundTime[lowestAvgTurnaroundTimeIndex] == avgTurnaroundTime[selection - '0']) {
-		printf("You are RIGHT ");
+		printf("You are RIGHT,\n ");
 		if (avgWaitTime[lowestAvgWaitingTimeIndex] == avgWaitTime[selection - '0'])
 			winner = lowestAvgWaitingTimeIndex;
 		else
 			winner = lowestAvgTurnaroundTimeIndex;
 	}
 	else {
-		printf("You are WRONG ");
+		printf("You are WRONG,\n ");
 
 		winner1 = lowestAvgTurnaroundTimeIndex;
 		winner2 = lowestAvgWaitingTimeIndex;
@@ -564,3 +570,4 @@ int main(void) {
 	return 0;
 
 }
+
