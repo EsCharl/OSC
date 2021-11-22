@@ -34,6 +34,9 @@ int main(void) {
 
 	int started = 0;
 	int mode;
+	int fail = 0;
+
+	char checkIfInt[10];
 
 	double avgWaitTime[6], avgTurnaroundTime[6];
 
@@ -60,16 +63,53 @@ int main(void) {
 		scanf(" %c", &inputMode);
 	}
 
+	scanf("%c", &blank);
+
 	if (inputMode == '1') {
 		while (exit != 'q') {
-			printf("Job name?(no spaces)\n");
-			scanf("%s", N->job_name);
+			do {
+				fail = 0;
+				printf("Job name?(no spaces)\n");
+				gets(N->job_name);
 
-			printf("Arrival Time? (Integer)\n");
-			scanf("%d", &N->arrivalTime);
+				for (int x = 0; x < strlen(N->job_name); x++) {
+					if (N->job_name[x] == ' ') {
+						fail++;
+					}
+				}
+			} while (fail != 0 || strlen(N->job_name) == 0);
 
-			printf("Burst Time (integer)\n");
-			scanf("%d", &N->burst);
+			printf("\n");
+
+			do {
+				fail = 0;
+				printf("Arrival Time? (Integer)\n");
+				gets(checkIfInt);
+
+				for (int x = 0; x < strlen(checkIfInt); x++) {
+					if (checkIfInt[x] - '0' > 9 || checkIfInt[x] - '0' < 0) {
+						fail++;
+					}
+				}
+			} while (fail != 0 || strlen(checkIfInt) == 0);
+
+			N->arrivalTime = atoi(checkIfInt);
+			printf("\n");
+
+			do {
+				fail = 0;
+				printf("Burst Time (integer)\n");
+				gets(checkIfInt);
+
+				for (int x = 0; x < strlen(checkIfInt); x++) {
+					if (checkIfInt[x] - '0' > 9 || checkIfInt[x] - '0' < 0) {
+						fail++;
+					}
+				}
+			} while (fail != 0 || strlen(checkIfInt) == 0);
+
+			N->burst = atoi(checkIfInt);
+			printf("\n");
 
 			N->completionTime = 0;
 			N->turnaroundTime = 0;
@@ -81,7 +121,6 @@ int main(void) {
 
 			printf("Would you like to add more jobs? (q to quit)\n");
 
-			scanf("%c", &blank);
 			scanf("%c", &exit);
 
 			if (exit != 'q') {
@@ -135,15 +174,35 @@ int main(void) {
 	int sortFlag, systemClock = 0, hold, count = 0, breakFlag = 1, loop, lockFlag, size = 0, delayFlag = 0, delayTime, delay = 0, timeLeft, timeQuantum = 0, nullFlag = 0;
 	char nameHold[100];
 
-	while (timeQuantum == 0) {
-		printf("\nPlease input the time quantum.\n");
-		scanf("%d", &timeQuantum); //get time quantum
-	}
+	scanf("%c", &blank);
 
-	while (delay == 0) { //make sure input is not 0
-		printf("Please input the time delay.\n");
-		scanf("%d", &delay); //get overhead
-	}
+	do {
+		fail = 0;
+		printf("\nPlease input the time quantum. (Integer)\n");
+		gets(checkIfInt);
+
+		for (int x = 0; x < strlen(checkIfInt); x++) {
+			if (checkIfInt[x] - '0' > 9 || checkIfInt[x] - '0' < 0) {
+				fail++;
+			}
+		}
+	} while (fail != 0 || strlen(checkIfInt) == 0);
+
+	timeQuantum = atoi(checkIfInt);
+
+	do { //make sure input is not 0
+		fail = 0;
+		printf("Please input the time delay. (Integer)\n");
+		gets(checkIfInt);
+
+		for (int x = 0; x < strlen(checkIfInt); x++) {
+			if (checkIfInt[x] - '0' > 9 || checkIfInt[x] - '0' < 0) {
+				fail++;
+			}
+		}
+	} while (fail != 0 || strlen(checkIfInt) == 0);
+
+	delay = atoi(checkIfInt);
 
 	while (!(selection == '1' || selection == '2' || selection == '3' || selection == '0' || selection == '4' || selection == '5')) {
 		printf("\nPlease enter a value between 0 to 5.\n");
