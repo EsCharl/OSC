@@ -131,7 +131,7 @@ int main(void) {
 	}
 	else {
 		printf("\nPlease input the file you'd like to load into the program.\n");
-		printf("    *Please ensure the file is in .txt file\n    *Use ' , ' to seperate each category. the format of seperation should be: \n           (Job Name) , (Arrival time) , (Burst)\n\n    *Job Name Should not contain any spaces\n");
+		printf("    *Please ensure the file is in .txt file\n    *Use \" , \" to seperate each category.the format of seperation should be : \n(Job Name), (Arrival time), (Burst)\n\n * Job Name Should not contain any spaces\n");
 		scanf("%s", fname);
 		read = fopen(fname, "r");
 
