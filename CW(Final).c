@@ -35,6 +35,7 @@ int main(void) {
 	int started = 0;
 	int mode;
 	int fail = 0;
+	int jobNum = 0;
 
 	char checkIfInt[10];
 
@@ -47,11 +48,11 @@ int main(void) {
 	nodePtr sPtr;
 	nodePtr cleaner;
 
+	FILE* read;
+
 	sPtr = malloc(sizeof(node));
 
 	N = sPtr;
-
-	FILE* read;
 
 	printf("Welcome to the Scheduling Algorithm program!\n");
 
@@ -66,7 +67,7 @@ int main(void) {
 	scanf("%c", &blank);
 
 	if (inputMode == '1') {
-		while (exit != 'q') {
+		do {
 			do {
 				fail = 0;
 				printf("Job name?(no spaces)\n");
@@ -102,7 +103,7 @@ int main(void) {
 				gets(checkIfInt);
 
 				for (int x = 0; x < strlen(checkIfInt); x++) {
-					if (checkIfInt[x] - '0' > 9 || checkIfInt[x] - '0' < 0) {
+					if (checkIfInt[x] - '0' > 9 || checkIfInt[x] - '0' < 1) {
 						fail++;
 					}
 				}
@@ -119,19 +120,28 @@ int main(void) {
 			N->entryTime = 0;
 			N->loadFlag = 0;
 
+			jobNum++;
+
 			printf("Would you like to add more jobs? (q to quit)\n");
 
 			scanf("%c", &exit);
 
-			if (exit != 'q') {
+			if (exit != 'q' || jobNum <= 1) {
 				N->next = malloc(sizeof(node));
 				N = N->next;
 			}
-		}
+
+			if (exit == 'q' && jobNum == 1) {
+				printf("this software need at least 2 jobs\n");
+			}
+
+			scanf("%c", &blank);
+
+		} while (exit != 'q' || jobNum <= 1);
 	}
 	else {
 		printf("\nPlease input the file you'd like to load into the program.\n");
-		printf("    *Please ensure the file is in .txt file\n    *Use \" , \" to seperate each category.the format of seperation should be : \n(Job Name), (Arrival time), (Burst)\n\n * Job Name Should not contain any spaces\n");
+		printf("    *Please ensure the file is in .txt file\n    *Use \" , \" to seperate each category.the format of seperation should be : \n(Job Name) , (Arrival time) , (Burst)\n\n * Job Name Should not contain any spaces\n");
 		scanf("%s", fname);
 		read = fopen(fname, "r");
 
@@ -156,6 +166,7 @@ int main(void) {
 				N->burstLeft = 0;
 				N->entryTime = 0;
 				N->loadFlag = 0;
+				jobNum++;
 
 				if (!feof(read)) {
 					N->next = malloc(sizeof(node));
@@ -164,7 +175,18 @@ int main(void) {
 			} // end while
 
 			fclose(read);
+			if (jobNum <= 1) {
+				printf("the text file need at least 2 jobs\n");
+				printf("the software will now shut down");
+				printf("\n");
+				sleep(5);
+				return 0;
+			}
+			printf("%i", jobNum);
+			scanf("%c", &blank);
+
 		} // end else
+
 	}
 
 	N->next = NULL;
@@ -173,8 +195,6 @@ int main(void) {
 
 	int sortFlag, systemClock = 0, hold, count = 0, breakFlag = 1, loop, lockFlag, size = 0, delayFlag = 0, delayTime, delay = 0, timeLeft, timeQuantum = 0, nullFlag = 0;
 	char nameHold[100];
-
-	scanf("%c", &blank);
 
 	do {
 		fail = 0;
