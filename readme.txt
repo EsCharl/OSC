@@ -1,6 +1,11 @@
 How to run this code?
 - double click on "CW(Final).exe"
 
+For the input text file
+- Make sure inputs are exact.
+- No extra new lines or extra spaces.
+- To prevent any errors
+
 ***************************************
 Shown below are the main components contained within the program that
 manages inbound jobs.
