@@ -211,7 +211,7 @@ int main(void) {
 					fail++;
 				}
 			}
-		} while (fail != 0 || strlen(checkIfInt) == 0);
+		} while (fail != 0 || strlen(checkIfInt) == 0 || atoi(checkIfInt) == 0);
 
 		timeQuantum = atoi(checkIfInt);
 
