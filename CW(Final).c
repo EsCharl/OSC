@@ -108,7 +108,7 @@ int main(void) {
 					gets(checkIfInt);
 
 					for (int x = 0; x < strlen(checkIfInt); x++) {
-						if (checkIfInt[x] - '0' > 9 || checkIfInt[x] - '0' < 1) {
+						if (checkIfInt[x] - '0' > 9 || checkIfInt[x] - '0' < 0) {
 							fail++;
 						}
 					}
