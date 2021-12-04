@@ -187,7 +187,7 @@ int main(void) {
 					sleep(5);
 					return 0;
 				}
-				printf("%i", jobNum);
+				printf("\n%i jobs entered.\n", jobNum);
 				scanf("%c", &blank);
 
 			} // end else
