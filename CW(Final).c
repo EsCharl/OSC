@@ -75,7 +75,7 @@ int main(void) {
 			do {
 				do {
 					fail = 0;
-					printf("Job name?(no spaces)\n");
+					printf("\nJob name?(no spaces)\n");
 					gets(N->job_name);
 
 					for (int x = 0; x < strlen(N->job_name); x++) {
@@ -216,7 +216,7 @@ int main(void) {
 
 		do { //make sure input is not 0
 			fail = 0;
-			printf("Please input the time delay. (Integer)\n");
+			printf("\nPlease input the time delay. (Integer)\n");
 			gets(checkIfInt);
 
 			for (int x = 0; x < strlen(checkIfInt); x++) {
