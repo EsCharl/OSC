@@ -187,14 +187,13 @@ int main(void) {
 					sleep(5);
 					return 0;
 				}
-				printf("\n%i jobs entered.\n", jobNum);
 				scanf("%c", &blank);
 
 			} // end else
 
 		}
-
 		N->next = NULL;
+		printf("\n%i jobs entered.\n", jobNum);
 
 		//return 0;
 
