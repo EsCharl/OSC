@@ -56,7 +56,6 @@ int main(void) {
 	typedef set* setPtr; //new
 
 	nodePtr N;
-	nodePtr sPtr;
 	nodePtr cleaner;
 
 	setPtr S; //new
@@ -82,9 +81,7 @@ int main(void) {
 
 		int jobNum = 0;
 
-		sPtr = malloc(sizeof(node));
-
-		N = sPtr;
+		N = malloc(sizeof(node));
 
 		S->firstJob = N;
 
@@ -293,14 +290,14 @@ int main(void) {
 
 
 
-		if (sPtr == NULL) { //if list is empty, end program
+		if (fPtr->firstJob == NULL) { //if list is empty, end program
 			printf("No processes found\n");
 			return 0;
 		}
 
 		printf("\n\n");
 
-		for (temp = sPtr; temp != NULL; temp = temp->next) { //get size of list
+		for (temp = fPtr->firstJob; temp != NULL; temp = temp->next) { //get size of list
 			size++;
 		}
 
@@ -312,7 +309,7 @@ int main(void) {
 
 
 			//reset variables
-			for (temp = sPtr; temp != NULL; temp = temp->next) { //loop through list
+			for (temp = fPtr->firstJob; temp != NULL; temp = temp->next) { //loop through list
 				temp->burstLeft = temp->burst; //copy burst time to burst time left
 				temp->waitingTimeSelected = 0; //reset first time processing flag
 				temp->loadFlag = 0; //reset load flag
@@ -320,7 +317,7 @@ int main(void) {
 
 			if (mode == 4 || mode == 5) { //for RR without arrival time
 
-				for (temp = sPtr; temp != NULL; temp = temp->next) { //set all arrival time = 0
+				for (temp = fPtr->firstJob; temp != NULL; temp = temp->next) { //set all arrival time = 0
 					temp->arrivalTime = 0;
 				}
 			}
@@ -341,7 +338,7 @@ int main(void) {
 
 			for (systemClock = 0; breakFlag; systemClock++) { //system clock, ends when processes terminate
 
-				for (temp = sPtr; temp != NULL; temp = temp->next) { //loop through list
+				for (temp = fPtr->firstJob; temp != NULL; temp = temp->next) { //loop through list
 
 					if (temp->arrivalTime == systemClock && temp->burstLeft != 0) { //if arrival time matches clock and burst time left
 
@@ -526,7 +523,7 @@ int main(void) {
 
 				breakFlag = 0; //break flag
 
-				for (temp = sPtr; temp != NULL; temp = temp->next) { //if all processes ended
+				for (temp = fPtr->firstJob; temp != NULL; temp = temp->next) { //if all processes ended
 					if (temp->burstLeft != 0) {
 						breakFlag = 1; //set flag
 						break;
@@ -540,7 +537,7 @@ int main(void) {
 				queue[loop] = NULL; //set null
 			}
 
-			temp = sPtr; //reset pointer
+			temp = fPtr->firstJob; //reset pointer
 
 			for (loop = 0; loop < size; loop++) {
 
@@ -589,7 +586,7 @@ int main(void) {
 				queue[loop] = NULL; //set null
 			}
 
-			for (temp = sPtr; temp != NULL; temp = temp->next) { //reset statistics
+			for (temp = fPtr->firstJob; temp != NULL; temp = temp->next) { //reset statistics
 
 				temp->completionTime = 0;
 				temp->turnaroundTime = 0;
