@@ -304,6 +304,7 @@ int main(void) {
 		for (mode = 0; mode < 6; mode++) { //loop through all modes
 
             tempSet = fPtr;
+            printf("\n%s\n\n", Jobs[mode]);
 
             do{
 
@@ -593,11 +594,9 @@ int main(void) {
 				temp->entryTime = 0;
 			}
 
-			printf("\n\n%s\n", Jobs[mode]);
-
 			int sumWaitTime = 0, sumTurnaroundTime = 0;
 
-			printf("%-15s | %-3s | %-3s : %-6s | %-6s | %-6s | %-6s\n", "Job Name", "A.T", "B.T", "E.T", "C.T", "T.A.T", "W.T");
+			printf("\n%-15s | %-3s | %-3s : %-6s | %-6s | %-6s | %-6s\n", "Job Name", "A.T", "B.T", "E.T", "C.T", "T.A.T", "W.T");
 
 			for (loop = (size*mode) + tempSet->job_before; loop < (size*mode) + tempSet->job_before + tempSet->job_num; loop++) { //print out information from loop
 
@@ -610,9 +609,7 @@ int main(void) {
 			avgWaitTime[mode*tempSet->set_num] = sumWaitTime / (double)tempSet->job_num;
 			avgTurnaroundTime[mode*tempSet->set_num] = sumTurnaroundTime / (double)tempSet->job_num;
 
-			printf("Average Turnaround time: %0.3f | Average Waiting Time: %0.3f\n", avgTurnaroundTime[mode*tempSet->set_num], avgWaitTime[mode*tempSet->set_num]);
-
-			printf("\n\n"); //get extra line
+			printf("Average Turnaround time: %0.3f | Average Waiting Time: %0.3f\n\n", avgTurnaroundTime[mode*tempSet->set_num], avgWaitTime[mode*tempSet->set_num]);
 
 			tempSet = tempSet->nextSet;
 
