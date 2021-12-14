@@ -36,7 +36,6 @@ int main(void) {
 	char inputMode;
 	char exit;
 	char blank;
-	char selection;
 	char quit;
 
 	char done; //new
@@ -279,14 +278,6 @@ int main(void) {
 		} while (fail != 0 || strlen(checkIfInt) == 0 || atoi(checkIfInt) == 0);
 
 		delay = atoi(checkIfInt);
-
-		do {
-			printf("\nPlease enter a value between 0 to 5.\n");
-			printf("Please select one of the scheduling algorithm that you think will be the most suited given the workload given.\n 0. Shortest Job First (SJF) Preemptive Version. \n 1. Shortest Job First (SJF) Non-Preemptive Version. \n 2. Round Robin (RR) with Overhead. \n 3. Round Robin (RR) without Overhead.\n 4. Round Robin (RR) with Overhead without Arrival Time. \n 5. Round Robin (RR) without Overhead without Arrival Time.\n");
-
-			scanf(" %c", &selection);
-		} while (!(selection == '1' || selection == '2' || selection == '3' || selection == '0' || selection == '4' || selection == '5'));
-
 
 		nodePtr temp, lPtr = NULL, compare;
         setPtr tempSet;
@@ -630,10 +621,8 @@ int main(void) {
 		}
 		printf("A.T = Arrival Time\nB.T = Burst Time\nE.T = Entry Time\nC.T = Complete Time\nT.A.T = Turnaround Time\nW.T = Wait Time\n");
 
-		printf("you've selected : %c. %s\n", selection, Jobs[selection - '0']);
-
 		double lowestAvgWaitingTime = 999999999999999999, lowestAvgTurnaroundTime = 999999999999999999;
-		int lowestAvgWaitingTimeIndex, lowestAvgTurnaroundTimeIndex, winner1 = 6, winner2 = 6, winner = 6;
+		int lowestAvgWaitingTimeIndex, lowestAvgTurnaroundTimeIndex;
 		for (int i = 0; i < 6; i++) {
 			if (lowestAvgWaitingTime >= avgWaitTime[i]) {
 				lowestAvgWaitingTime = avgWaitTime[i];
@@ -647,39 +636,6 @@ int main(void) {
 		}
 
 		printf("\n");
-
-		if (avgWaitTime[lowestAvgWaitingTimeIndex] == avgWaitTime[selection - '0'] || avgTurnaroundTime[lowestAvgTurnaroundTimeIndex] == avgTurnaroundTime[selection - '0']) {
-			printf("You are RIGHT,\n ");
-			if (avgWaitTime[lowestAvgWaitingTimeIndex] == avgWaitTime[selection - '0'])
-				winner = lowestAvgWaitingTimeIndex;
-			else
-				winner = lowestAvgTurnaroundTimeIndex;
-		}
-		else {
-			printf("You are WRONG,\n ");
-
-			winner1 = lowestAvgTurnaroundTimeIndex;
-			winner2 = lowestAvgWaitingTimeIndex;
-
-			if (winner1 == winner2)
-				winner = winner1;
-		}
-
-		if (winner < 6)
-			printf("%s is the best algorithm based on this workload ", Jobs[winner]);
-
-		if (avgWaitTime[lowestAvgWaitingTimeIndex] == avgWaitTime[selection - '0'] && avgTurnaroundTime[lowestAvgTurnaroundTimeIndex] == avgTurnaroundTime[selection - '0'])
-			printf("in both lowest average wait time and lowest average turnaround time.\n");
-		else if (avgWaitTime[lowestAvgWaitingTimeIndex] == avgWaitTime[selection - '0'])
-			printf("in lowest average wait time.\n");
-		else if (avgTurnaroundTime[lowestAvgTurnaroundTimeIndex] == avgTurnaroundTime[selection - '0'])
-			printf("in lowest average turnaround time.\n");
-
-		if (winner1 != winner2) {
-
-			printf("%s is the best algorithm based on this workload for lowest average turnaround time and %s for the lowest average waiting time.\n", Jobs[winner1], Jobs[winner2]);
-
-		}
 
 		printf("\nLowest Avg Turnaround Time : %0.3f\n", avgTurnaroundTime[lowestAvgTurnaroundTimeIndex]);
 		for (int i = 0; i < 6; i++) {
