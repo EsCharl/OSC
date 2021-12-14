@@ -61,6 +61,7 @@ int main(void) {
 
 	setPtr S; //new
 	setPtr fPtr; //new
+	setPtr setCleaner; //new
 
 	FILE* read;
 
@@ -690,10 +691,18 @@ int main(void) {
 
 		printf("\n");
 
-		while (sPtr != NULL) {
-			cleaner = sPtr;
-			sPtr = sPtr->next;
-			free(cleaner);
+		while(fPtr != NULL){
+
+            setCleaner = fPtr;
+
+            while (fPtr->firstJob != NULL) {
+                cleaner = fPtr->firstJob;
+                fPtr->firstJob = fPtr->firstJob->next;
+                free(fPtr->firstJob);
+            }
+
+            fPtr = fPtr->nextSet;
+            free(setCleaner);
 		}
 
 		free(save);
