@@ -22,6 +22,13 @@ struct Job
 	struct Job* next;
 };
 
+struct Set
+{
+    int job_num;
+    struct Job* firstJob;
+    struct Set* nextSet;
+};
+
 int main(void) {
 	char fname[100];
 	char inputMode;
@@ -29,6 +36,8 @@ int main(void) {
 	char blank;
 	char selection;
 	char quit;
+
+	char done; //new
 
 	char Jobs[6][60] = { "Shortest Job First (SJF) Preemptive Version", "Shortest Job First (SJF) Non-Preemptive Version", "Round Robin (RR) with Overhead", "Round Robin (RR) without Overhead","Round Robin (RR) with Overhead without Arrival Time", "Round Robin (RR) without Overhead without Arrival Time" };
 
@@ -43,9 +52,15 @@ int main(void) {
 	typedef struct Job node;
 	typedef node* nodePtr;
 
+	typedef struct Set set; //new
+	typedef set* setPtr; //new
+
 	nodePtr N;
 	nodePtr sPtr;
 	nodePtr cleaner;
+
+	setPtr S; //new
+	setPtr fPtr; //new
 
 	FILE* read;
 
@@ -53,15 +68,26 @@ int main(void) {
 	nodePtr* queue; //array of pointers
 
 	do {
+
+        int setNum = 0; //new
+
+        fPtr = malloc(sizeof(set)); //new
+
+        S = fPtr; //new
+
+        printf("Welcome to the Scheduling Algorithm program!\n");
+
+	do {
+
 		int jobNum = 0;
 
 		sPtr = malloc(sizeof(node));
 
 		N = sPtr;
 
-		printf("Welcome to the Scheduling Algorithm program!\n");
+		S->firstJob = N;
 
-		printf("How would you like to input the inputs\n");
+		printf("\nHow would you like to input the inputs\n");
 		do {
 			printf("Please enter a value of 1 or 2.\n");
 			printf(" 1. Manually Input.\n 2. Input via .txt file.\n");
@@ -192,8 +218,34 @@ int main(void) {
 			} // end else
 
 		}
-		N->next = NULL;
-		printf("\n%i jobs entered.\n", jobNum);
+            N->next = NULL;
+            printf("\n%i jobs entered.\n", jobNum);
+
+            S->job_num = jobNum;
+            S->nextSet = malloc(sizeof(set));
+            S = S->nextSet;
+
+            setNum++;
+
+            printf("Would you like to add more sets? (q to quit)\n");
+
+            scanf("%c", &done);
+
+            if (done != 'q' || setNum <= 1) {
+                N->next = malloc(sizeof(node));
+                N = N->next;
+            }
+
+            if (done == 'q' && setNum == 1) {
+                printf("this software need at least 2 sets\n");
+            }
+
+            scanf("%c", &blank);
+
+        } while (done != 'q' || setNum <= 1);
+
+        S->nextSet = NULL;
+        printf("\n%i sets entered.\n", setNum);
 
 		//return 0;
 
