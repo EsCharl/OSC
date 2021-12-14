@@ -22,13 +22,23 @@ struct Job
 	struct Job* next;
 };
 
+struct Set
+{
+    int set_num;
+    int job_num;
+    int job_before;
+    struct Job* firstJob;
+    struct Set* nextSet;
+};
+
 int main(void) {
 	char fname[100];
 	char inputMode;
 	char exit;
 	char blank;
-	char selection;
 	char quit;
+
+	char done; //new
 
 	char Jobs[6][60] = { "Shortest Job First (SJF) Preemptive Version", "Shortest Job First (SJF) Non-Preemptive Version", "Round Robin (RR) with Overhead", "Round Robin (RR) without Overhead","Round Robin (RR) with Overhead without Arrival Time", "Round Robin (RR) without Overhead without Arrival Time" };
 
@@ -38,14 +48,18 @@ int main(void) {
 
 	char checkIfInt[10];
 
-	double avgWaitTime[6], avgTurnaroundTime[6];
-
 	typedef struct Job node;
 	typedef node* nodePtr;
 
+	typedef struct Set set; //new
+	typedef set* setPtr; //new
+
 	nodePtr N;
-	nodePtr sPtr;
 	nodePtr cleaner;
+
+	setPtr S; //new
+	setPtr fPtr; //new
+	setPtr setCleaner; //new
 
 	FILE* read;
 
@@ -53,15 +67,27 @@ int main(void) {
 	nodePtr* queue; //array of pointers
 
 	do {
+
+        int totalJobs = 0;
+
+        int setNum = 0; //new
+
+        fPtr = malloc(sizeof(set)); //new
+
+        S = fPtr; //new
+
+        printf("Welcome to the Scheduling Algorithm program!\n");
+
+	do {
+
 		int jobNum = 0;
 
-		sPtr = malloc(sizeof(node));
+		N = malloc(sizeof(node));
 
-		N = sPtr;
+		S->firstJob = N;
+		S->job_before = totalJobs;
 
-		printf("Welcome to the Scheduling Algorithm program!\n");
-
-		printf("How would you like to input the inputs\n");
+		printf("\nHow would you like to input the inputs\n");
 		do {
 			printf("Please enter a value of 1 or 2.\n");
 			printf(" 1. Manually Input.\n 2. Input via .txt file.\n");
@@ -192,8 +218,33 @@ int main(void) {
 			} // end else
 
 		}
-		N->next = NULL;
-		printf("\n%i jobs entered.\n", jobNum);
+            N->next = NULL;
+            printf("\n%i jobs entered.\n", jobNum);
+
+            S->job_num = jobNum;
+            S->set_num = setNum;
+            totalJobs += jobNum;
+            setNum++;
+
+            printf("Would you like to add more sets? (q to quit)\n");
+
+            scanf("%c", &done);
+
+            if (done != 'q' || setNum <= 1) {
+                S->nextSet = malloc(sizeof(set));
+                S = S->nextSet;
+            }
+
+            if (done == 'q' && setNum == 1) {
+                printf("this software need at least 2 sets\n");
+            }
+
+            scanf("%c", &blank);
+
+        } while (done != 'q' || setNum <= 1);
+
+        S->nextSet = NULL;
+        printf("\n%i sets entered.\n", setNum);
 
 		//return 0;
 
@@ -228,38 +279,37 @@ int main(void) {
 
 		delay = atoi(checkIfInt);
 
-		do {
-			printf("\nPlease enter a value between 0 to 5.\n");
-			printf("Please select one of the scheduling algorithm that you think will be the most suited given the workload given.\n 0. Shortest Job First (SJF) Preemptive Version. \n 1. Shortest Job First (SJF) Non-Preemptive Version. \n 2. Round Robin (RR) with Overhead. \n 3. Round Robin (RR) without Overhead.\n 4. Round Robin (RR) with Overhead without Arrival Time. \n 5. Round Robin (RR) without Overhead without Arrival Time.\n");
-
-			scanf(" %c", &selection);
-		} while (!(selection == '1' || selection == '2' || selection == '3' || selection == '0' || selection == '4' || selection == '5'));
-
-
 		nodePtr temp, lPtr = NULL, compare;
+        setPtr tempSet;
 
-
-
-		if (sPtr == NULL) { //if list is empty, end program
+		if (fPtr->firstJob == NULL) { //if list is empty, end program
 			printf("No processes found\n");
 			return 0;
 		}
 
-		printf("\n\n");
+		printf("\n");
 
-		for (temp = sPtr; temp != NULL; temp = temp->next) { //get size of list
-			size++;
+		for (tempSet = fPtr; tempSet != NULL; tempSet = tempSet->nextSet) { //get size of list
+			if(tempSet->job_num > size){
+                size = tempSet->job_num ;
+			}
 		}
 
 		queue = malloc(sizeof(*queue) * (size + 2)); //get space for queue
 
-		save = malloc(sizeof(node) * 6 * size); //get space to save array results, 6 is for 6 algorithms
+		save = malloc(sizeof(node) * 6 * totalJobs); //get space to save array results, 6 is for 6 algorithms
+
+		double avgWaitTime[6*setNum], avgTurnaroundTime[6*setNum];
 
 		for (mode = 0; mode < 6; mode++) { //loop through all modes
 
+            tempSet = fPtr;
+            printf("\n%s\n\n", Jobs[mode]);
+
+            do{
 
 			//reset variables
-			for (temp = sPtr; temp != NULL; temp = temp->next) { //loop through list
+			for (temp = tempSet->firstJob; temp != NULL; temp = temp->next) { //loop through list
 				temp->burstLeft = temp->burst; //copy burst time to burst time left
 				temp->waitingTimeSelected = 0; //reset first time processing flag
 				temp->loadFlag = 0; //reset load flag
@@ -267,7 +317,7 @@ int main(void) {
 
 			if (mode == 4 || mode == 5) { //for RR without arrival time
 
-				for (temp = sPtr; temp != NULL; temp = temp->next) { //set all arrival time = 0
+				for (temp = tempSet->firstJob; temp != NULL; temp = temp->next) { //set all arrival time = 0
 					temp->arrivalTime = 0;
 				}
 			}
@@ -288,7 +338,7 @@ int main(void) {
 
 			for (systemClock = 0; breakFlag; systemClock++) { //system clock, ends when processes terminate
 
-				for (temp = sPtr; temp != NULL; temp = temp->next) { //loop through list
+				for (temp = tempSet->firstJob; temp != NULL; temp = temp->next) { //loop through list
 
 					if (temp->arrivalTime == systemClock && temp->burstLeft != 0) { //if arrival time matches clock and burst time left
 
@@ -298,7 +348,7 @@ int main(void) {
 						}
 						else { //if first node is filled
 
-							for (loop = 0; loop < size; loop++) { //loop through queue
+							for (loop = 0; loop < tempSet->job_num; loop++) { //loop through queue
 
 								if (queue[loop] == NULL) { //find empty node
 									queue[loop] = temp; //fill empty node
@@ -385,7 +435,7 @@ int main(void) {
 						queue[0]->completionTime = systemClock; //get completion time from clock
 						queue[0]->turnaroundTime = (queue[0]->completionTime - queue[0]->arrivalTime); //get turnaround time from formula//get waiting time from formula
 
-						for (loop = 0; loop < size; loop++) { //loop through queue
+						for (loop = 0; loop < tempSet->job_num; loop++) { //loop through queue
 							queue[loop] = queue[loop + 1]; //move jobs to the front
 							queue[loop + 1] = NULL; //set last queue as NULL
 						}
@@ -406,7 +456,7 @@ int main(void) {
 							queue[0]->loadFlag = 0;
 						}
 
-						for (loop = 0; loop < (size + 1); loop++) { //loop through queue
+						for (loop = 0; loop < (tempSet->job_num + 1); loop++) { //loop through queue
 
 							if (queue[loop] == NULL) { //find empty node
 								queue[loop] = queue[0]; //fill empty node
@@ -414,7 +464,7 @@ int main(void) {
 							}
 						}
 
-						for (loop = 0; loop < size; loop++) { //loop through queue
+						for (loop = 0; loop < tempSet->job_num; loop++) { //loop through queue
 							queue[loop] = queue[loop + 1]; //move jobs to the front
 							queue[loop + 1] = NULL; //set last queue as NULL
 						}
@@ -473,7 +523,7 @@ int main(void) {
 
 				breakFlag = 0; //break flag
 
-				for (temp = sPtr; temp != NULL; temp = temp->next) { //if all processes ended
+				for (temp = tempSet->firstJob; temp != NULL; temp = temp->next) { //if all processes ended
 					if (temp->burstLeft != 0) {
 						breakFlag = 1; //set flag
 						break;
@@ -487,9 +537,9 @@ int main(void) {
 				queue[loop] = NULL; //set null
 			}
 
-			temp = sPtr; //reset pointer
+			temp = tempSet->firstJob; //reset pointer
 
-			for (loop = 0; loop < size; loop++) {
+			for (loop = 0; loop < tempSet->job_num; loop++) {
 
 				queue[loop] = temp;
 				temp = temp->next;
@@ -519,7 +569,7 @@ int main(void) {
 
 			hold = 0; //temp
 
-			for (loop = size * mode; loop < size * (mode + 1); loop++) { //loop through save array
+			for (loop = (size*mode) + tempSet->job_before; loop < (size*mode) + tempSet->job_before + tempSet->job_num; loop++) { //loop through save array
 
 				strcpy(save[loop].job_name, queue[hold]->job_name);
 				save[loop].burst = queue[hold]->burst;
@@ -536,7 +586,7 @@ int main(void) {
 				queue[loop] = NULL; //set null
 			}
 
-			for (temp = sPtr; temp != NULL; temp = temp->next) { //reset statistics
+			for (temp = tempSet->firstJob; temp != NULL; temp = temp->next) { //reset statistics
 
 				temp->completionTime = 0;
 				temp->turnaroundTime = 0;
@@ -544,91 +594,65 @@ int main(void) {
 				temp->entryTime = 0;
 			}
 
-			printf("\n\n%s\n", Jobs[mode]);
-
 			int sumWaitTime = 0, sumTurnaroundTime = 0;
 
-			printf("%-15s | %-3s | %-3s : %-6s | %-6s | %-6s | %-6s\n", "Job Name", "A.T", "B.T", "E.T", "C.T", "T.A.T", "W.T");
+			printf("\n%-15s | %-3s | %-3s : %-6s | %-6s | %-6s | %-6s\n", "Job Name", "A.T", "B.T", "E.T", "C.T", "T.A.T", "W.T");
 
-			for (loop = size * mode; loop < size * (mode + 1); loop++) { //print out information from loop
+			for (loop = (size*mode) + tempSet->job_before; loop < (size*mode) + tempSet->job_before + tempSet->job_num; loop++) { //print out information from loop
+
 				printf("%-15s | %-3d | %-3d : %-6d | %-6d | %-6d | %-6d\n", save[loop].job_name, save[loop].arrivalTime, save[loop].burst, save[loop].entryTime, save[loop].completionTime, save[loop].turnaroundTime, save[loop].waitingTime);
 
 				sumWaitTime += save[loop].waitingTime;
 				sumTurnaroundTime += save[loop].turnaroundTime;
 			}
 
-			avgWaitTime[mode] = sumWaitTime / (double)size;
-			avgTurnaroundTime[mode] = sumTurnaroundTime / (double)size;
+			avgWaitTime[mode+(tempSet->set_num*6)] = sumWaitTime / (double)tempSet->job_num;
+			avgTurnaroundTime[mode+(tempSet->set_num*6)] = sumTurnaroundTime / (double)tempSet->job_num;
 
-			printf("Average Turnaround time: %0.3f | Average Waiting Time: %0.3f\n", avgTurnaroundTime[mode], avgWaitTime[mode]);
+			printf("Average Turnaround time: %0.3f | Average Waiting Time: %0.3f\n\n", avgTurnaroundTime[mode+(tempSet->set_num*6)], avgWaitTime[mode+(tempSet->set_num*6)]);
 
-			printf("\n\n"); //get extra line
+			tempSet = tempSet->nextSet;
 
-		}
-		printf("A.T = Arrival Time\nB.T = Burst Time\nE.T = Entry Time\nC.T = Complete Time\nT.A.T = Turnaround Time\nW.T = Wait Time\n");
-
-		printf("you've selected : %c. %s\n", selection, Jobs[selection - '0']);
-
-		double lowestAvgWaitingTime = 999999999999999999, lowestAvgTurnaroundTime = 999999999999999999;
-		int lowestAvgWaitingTimeIndex, lowestAvgTurnaroundTimeIndex, winner1 = 6, winner2 = 6, winner = 6;
-		for (int i = 0; i < 6; i++) {
-			if (lowestAvgWaitingTime >= avgWaitTime[i]) {
-				lowestAvgWaitingTime = avgWaitTime[i];
-				lowestAvgWaitingTimeIndex = i;
-			}
-
-			if (lowestAvgTurnaroundTime >= avgTurnaroundTime[i]) {
-				lowestAvgTurnaroundTimeIndex = i;
-				lowestAvgTurnaroundTime = avgTurnaroundTime[i];
-			}
-		}
-
-		printf("\n");
-
-		if (avgWaitTime[lowestAvgWaitingTimeIndex] == avgWaitTime[selection - '0'] || avgTurnaroundTime[lowestAvgTurnaroundTimeIndex] == avgTurnaroundTime[selection - '0']) {
-			printf("You are RIGHT,\n ");
-			if (avgWaitTime[lowestAvgWaitingTimeIndex] == avgWaitTime[selection - '0'])
-				winner = lowestAvgWaitingTimeIndex;
-			else
-				winner = lowestAvgTurnaroundTimeIndex;
-		}
-		else {
-			printf("You are WRONG,\n ");
-
-			winner1 = lowestAvgTurnaroundTimeIndex;
-			winner2 = lowestAvgWaitingTimeIndex;
-
-			if (winner1 == winner2)
-				winner = winner1;
-		}
-
-		if (winner < 6)
-			printf("%s is the best algorithm based on this workload ", Jobs[winner]);
-
-		if (avgWaitTime[lowestAvgWaitingTimeIndex] == avgWaitTime[selection - '0'] && avgTurnaroundTime[lowestAvgTurnaroundTimeIndex] == avgTurnaroundTime[selection - '0'])
-			printf("in both lowest average wait time and lowest average turnaround time.\n");
-		else if (avgWaitTime[lowestAvgWaitingTimeIndex] == avgWaitTime[selection - '0'])
-			printf("in lowest average wait time.\n");
-		else if (avgTurnaroundTime[lowestAvgTurnaroundTimeIndex] == avgTurnaroundTime[selection - '0'])
-			printf("in lowest average turnaround time.\n");
-
-		if (winner1 != winner2) {
-
-			printf("%s is the best algorithm based on this workload for lowest average turnaround time and %s for the lowest average waiting time.\n", Jobs[winner1], Jobs[winner2]);
+			}while(tempSet!=NULL);
 
 		}
+		printf("\nA.T = Arrival Time\nB.T = Burst Time\nE.T = Entry Time\nC.T = Complete Time\nT.A.T = Turnaround Time\nW.T = Wait Time\n");
 
-		printf("\nLowest Avg Turnaround Time : %0.3f\n", avgTurnaroundTime[lowestAvgTurnaroundTimeIndex]);
-		for (int i = 0; i < 6; i++) {
-			if (avgTurnaroundTime[i] == avgTurnaroundTime[lowestAvgTurnaroundTimeIndex])
-				printf("> %s\n", Jobs[i]);
-		}
+		tempSet = fPtr;
 
-		printf("\nLowest Avg Waiting Time : %0.3f\n", avgWaitTime[lowestAvgWaitingTimeIndex]);
-		for (int i = 0; i < 6; i++) {
-			if (avgWaitTime[i] == avgWaitTime[lowestAvgWaitingTimeIndex])
-				printf("> %s\n", Jobs[i]);
-		}
+		do{
+
+            double lowestAvgWaitingTime = 999999999999999999, lowestAvgTurnaroundTime = 999999999999999999;
+            int lowestAvgWaitingTimeIndex, lowestAvgTurnaroundTimeIndex;
+            for (int i = 0; i < 6; i++) {
+                if (lowestAvgWaitingTime >= avgWaitTime[i+(tempSet->set_num*6)]) {
+                    lowestAvgWaitingTime = avgWaitTime[i+(tempSet->set_num*6)];
+                    lowestAvgWaitingTimeIndex = i+(tempSet->set_num*6);
+                }
+
+                if (lowestAvgTurnaroundTime >= avgTurnaroundTime[i+(tempSet->set_num*6)]) {
+                    lowestAvgTurnaroundTime = avgTurnaroundTime[i+(tempSet->set_num*6)];
+                    lowestAvgTurnaroundTimeIndex = i+(tempSet->set_num*6);
+                }
+            }
+
+            printf("\n");
+
+            printf("\nLowest Avg Turnaround Time For Set %d : %0.3f\n", tempSet->set_num+1, avgTurnaroundTime[lowestAvgTurnaroundTimeIndex]);
+            for (int i = 0; i < 6; i++) {
+                if (avgTurnaroundTime[i+(tempSet->set_num*6)] == avgTurnaroundTime[lowestAvgTurnaroundTimeIndex])
+                    printf("> %s\n", Jobs[i]);
+            }
+
+            printf("\nLowest Avg Waiting Time For Set %d : %0.3f\n", tempSet->set_num+1, avgWaitTime[lowestAvgWaitingTimeIndex]);
+            for (int i = 0; i < 6; i++) {
+                if (avgWaitTime[i+(tempSet->set_num*6)] == avgWaitTime[lowestAvgWaitingTimeIndex])
+                    printf("> %s\n", Jobs[i]);
+            }
+
+            tempSet = tempSet->nextSet;
+
+		}while(tempSet != NULL);
 
 		printf("\nto quit : 'q'\nto restart : input any key\n");
 
@@ -638,10 +662,18 @@ int main(void) {
 
 		printf("\n");
 
-		while (sPtr != NULL) {
-			cleaner = sPtr;
-			sPtr = sPtr->next;
-			free(cleaner);
+		while(fPtr != NULL){
+
+            setCleaner = fPtr;
+
+            while (fPtr->firstJob != NULL) {
+                cleaner = fPtr->firstJob;
+                fPtr->firstJob = fPtr->firstJob->next;
+                free(fPtr->firstJob);
+            }
+
+            fPtr = fPtr->nextSet;
+            free(setCleaner);
 		}
 
 		free(save);
