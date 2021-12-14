@@ -220,8 +220,6 @@ int main(void) {
             printf("\n%i jobs entered.\n", jobNum);
 
             S->job_num = jobNum;
-            S->nextSet = malloc(sizeof(set));
-            S = S->nextSet;
 
             setNum++;
 
@@ -230,8 +228,8 @@ int main(void) {
             scanf("%c", &done);
 
             if (done != 'q' || setNum <= 1) {
-                N->next = malloc(sizeof(node));
-                N = N->next;
+                S->nextSet = malloc(sizeof(set));
+                S = S->nextSet;
             }
 
             if (done == 'q' && setNum == 1) {
@@ -287,8 +285,7 @@ int main(void) {
 
 
 		nodePtr temp, lPtr = NULL, compare;
-
-
+        setPtr tempSet;
 
 		if (fPtr->firstJob == NULL) { //if list is empty, end program
 			printf("No processes found\n");
@@ -297,9 +294,13 @@ int main(void) {
 
 		printf("\n\n");
 
-		for (temp = fPtr->firstJob; temp != NULL; temp = temp->next) { //get size of list
-			size++;
+		for (tempSet = fPtr; tempSet != NULL; tempSet = tempSet->nextSet) { //get size of list
+			if(tempSet->job_num > size){
+                size = tempSet->job_num ;
+			}
 		}
+
+		printf("%d",size);
 
 		queue = malloc(sizeof(*queue) * (size + 2)); //get space for queue
 
