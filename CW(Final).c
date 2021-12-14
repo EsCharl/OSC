@@ -66,6 +66,9 @@ int main(void) {
 	node* save; //array of structs
 	nodePtr* queue; //array of pointers
 
+	double *avgWaitTime;
+	double *avgTurnaroundTime;
+
 	do {
 
         int totalJobs = 0;
@@ -299,7 +302,9 @@ int main(void) {
 
 		save = malloc(sizeof(node) * 6 * totalJobs); //get space to save array results, 6 is for 6 algorithms
 
-		double avgWaitTime[6*setNum], avgTurnaroundTime[6*setNum];
+		avgWaitTime = malloc(sizeof(double)*6*setNum);
+
+		avgTurnaroundTime = malloc(sizeof(double)*6*setNum);
 
 		for (mode = 0; mode < 6; mode++) { //loop through all modes
 
@@ -636,15 +641,15 @@ int main(void) {
                 }
             }
 
-            printf("\n");
+            printf("\n\nSet %d\n",tempSet->set_num+1);
 
-            printf("\nLowest Avg Turnaround Time For Set %d : %0.3f\n", tempSet->set_num+1, avgTurnaroundTime[lowestAvgTurnaroundTimeIndex]);
+            printf("\nLowest Avg Turnaround Time : %0.3f\n", avgTurnaroundTime[lowestAvgTurnaroundTimeIndex]);
             for (int i = 0; i < 6; i++) {
                 if (avgTurnaroundTime[i+(tempSet->set_num*6)] == avgTurnaroundTime[lowestAvgTurnaroundTimeIndex])
                     printf("> %s\n", Jobs[i]);
             }
 
-            printf("\nLowest Avg Waiting Time For Set %d : %0.3f\n", tempSet->set_num+1, avgWaitTime[lowestAvgWaitingTimeIndex]);
+            printf("\nLowest Avg Waiting Time : %0.3f\n", avgWaitTime[lowestAvgWaitingTimeIndex]);
             for (int i = 0; i < 6; i++) {
                 if (avgWaitTime[i+(tempSet->set_num*6)] == avgWaitTime[lowestAvgWaitingTimeIndex])
                     printf("> %s\n", Jobs[i]);
@@ -654,13 +659,13 @@ int main(void) {
 
 		}while(tempSet != NULL);
 
-		printf("\nto quit : 'q'\nto restart : input any key\n");
+            printf("\nto quit : 'q'\nto restart : input any key\n");
 
-		scanf(" %c", &quit);
+            scanf(" %c", &quit);
 
-		scanf("%c", &blank);
+            scanf("%c", &blank);
 
-		printf("\n");
+            printf("\n");
 
 		while(fPtr != NULL){
 
@@ -678,6 +683,8 @@ int main(void) {
 
 		free(save);
 		free(queue);
+		free(avgWaitTime);
+		free(avgTurnaroundTime);
 
 	} while (quit != 'q');
 
