@@ -569,7 +569,7 @@ int main(void) {
 
 			hold = 0; //temp
 
-			for (loop = (size*mode) + tempSet->job_before; loop < (size*mode) + tempSet->job_before + tempSet->job_num; loop++) { //loop through save array
+			for (loop = (totalJobs*mode) + tempSet->job_before; loop < (totalJobs*mode) + tempSet->job_before + tempSet->job_num; loop++) { //loop through save array
 
 				strcpy(save[loop].job_name, queue[hold]->job_name);
 				save[loop].burst = queue[hold]->burst;
@@ -598,7 +598,7 @@ int main(void) {
 
 			printf("\n%-15s | %-3s | %-3s : %-6s | %-6s | %-6s | %-6s\n", "Job Name", "A.T", "B.T", "E.T", "C.T", "T.A.T", "W.T");
 
-			for (loop = (size*mode) + tempSet->job_before; loop < (size*mode) + tempSet->job_before + tempSet->job_num; loop++) { //print out information from loop
+			for (loop = (totalJobs*mode) + tempSet->job_before; loop < (totalJobs*mode) + tempSet->job_before + tempSet->job_num; loop++) { //print out information from loop
 
 				printf("%-15s | %-3d | %-3d : %-6d | %-6d | %-6d | %-6d\n", save[loop].job_name, save[loop].arrivalTime, save[loop].burst, save[loop].entryTime, save[loop].completionTime, save[loop].turnaroundTime, save[loop].waitingTime);
 
