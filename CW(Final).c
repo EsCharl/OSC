@@ -222,9 +222,9 @@ int main(void) {
             printf("\n%i jobs entered.\n", jobNum);
 
             S->job_num = jobNum;
+            S->set_num = setNum;
             totalJobs += jobNum;
             setNum++;
-            S->set_num = setNum;
 
             printf("Would you like to add more sets? (q to quit)\n");
 
@@ -287,7 +287,7 @@ int main(void) {
 			return 0;
 		}
 
-		printf("\n\n");
+		printf("\n");
 
 		for (tempSet = fPtr; tempSet != NULL; tempSet = tempSet->nextSet) { //get size of list
 			if(tempSet->job_num > size){
@@ -606,45 +606,53 @@ int main(void) {
 				sumTurnaroundTime += save[loop].turnaroundTime;
 			}
 
-			avgWaitTime[mode*tempSet->set_num] = sumWaitTime / (double)tempSet->job_num;
-			avgTurnaroundTime[mode*tempSet->set_num] = sumTurnaroundTime / (double)tempSet->job_num;
+			avgWaitTime[mode+(tempSet->set_num*6)] = sumWaitTime / (double)tempSet->job_num;
+			avgTurnaroundTime[mode+(tempSet->set_num*6)] = sumTurnaroundTime / (double)tempSet->job_num;
 
-			printf("Average Turnaround time: %0.3f | Average Waiting Time: %0.3f\n\n", avgTurnaroundTime[mode*tempSet->set_num], avgWaitTime[mode*tempSet->set_num]);
+			printf("Average Turnaround time: %0.3f | Average Waiting Time: %0.3f\n\n", avgTurnaroundTime[mode+(tempSet->set_num*6)], avgWaitTime[mode+(tempSet->set_num*6)]);
 
 			tempSet = tempSet->nextSet;
 
 			}while(tempSet!=NULL);
 
 		}
-		printf("A.T = Arrival Time\nB.T = Burst Time\nE.T = Entry Time\nC.T = Complete Time\nT.A.T = Turnaround Time\nW.T = Wait Time\n");
+		printf("\nA.T = Arrival Time\nB.T = Burst Time\nE.T = Entry Time\nC.T = Complete Time\nT.A.T = Turnaround Time\nW.T = Wait Time\n");
 
-		double lowestAvgWaitingTime = 999999999999999999, lowestAvgTurnaroundTime = 999999999999999999;
-		int lowestAvgWaitingTimeIndex, lowestAvgTurnaroundTimeIndex;
-		for (int i = 0; i < 6; i++) {
-			if (lowestAvgWaitingTime >= avgWaitTime[i]) {
-				lowestAvgWaitingTime = avgWaitTime[i];
-				lowestAvgWaitingTimeIndex = i;
-			}
+		tempSet = fPtr;
 
-			if (lowestAvgTurnaroundTime >= avgTurnaroundTime[i]) {
-				lowestAvgTurnaroundTimeIndex = i;
-				lowestAvgTurnaroundTime = avgTurnaroundTime[i];
-			}
-		}
+		do{
 
-		printf("\n");
+            double lowestAvgWaitingTime = 999999999999999999, lowestAvgTurnaroundTime = 999999999999999999;
+            int lowestAvgWaitingTimeIndex, lowestAvgTurnaroundTimeIndex;
+            for (int i = 0; i < 6; i++) {
+                if (lowestAvgWaitingTime >= avgWaitTime[i+(tempSet->set_num*6)]) {
+                    lowestAvgWaitingTime = avgWaitTime[i+(tempSet->set_num*6)];
+                    lowestAvgWaitingTimeIndex = i+(tempSet->set_num*6);
+                }
 
-		printf("\nLowest Avg Turnaround Time : %0.3f\n", avgTurnaroundTime[lowestAvgTurnaroundTimeIndex]);
-		for (int i = 0; i < 6; i++) {
-			if (avgTurnaroundTime[i] == avgTurnaroundTime[lowestAvgTurnaroundTimeIndex])
-				printf("> %s\n", Jobs[i]);
-		}
+                if (lowestAvgTurnaroundTime >= avgTurnaroundTime[i+(tempSet->set_num*6)]) {
+                    lowestAvgTurnaroundTime = avgTurnaroundTime[i+(tempSet->set_num*6)];
+                    lowestAvgTurnaroundTimeIndex = i+(tempSet->set_num*6);
+                }
+            }
 
-		printf("\nLowest Avg Waiting Time : %0.3f\n", avgWaitTime[lowestAvgWaitingTimeIndex]);
-		for (int i = 0; i < 6; i++) {
-			if (avgWaitTime[i] == avgWaitTime[lowestAvgWaitingTimeIndex])
-				printf("> %s\n", Jobs[i]);
-		}
+            printf("\n");
+
+            printf("\nLowest Avg Turnaround Time For Set %d : %0.3f\n", tempSet->set_num+1, avgTurnaroundTime[lowestAvgTurnaroundTimeIndex]);
+            for (int i = 0; i < 6; i++) {
+                if (avgTurnaroundTime[i+(tempSet->set_num*6)] == avgTurnaroundTime[lowestAvgTurnaroundTimeIndex])
+                    printf("> %s\n", Jobs[i]);
+            }
+
+            printf("\nLowest Avg Waiting Time For Set %d : %0.3f\n", tempSet->set_num+1, avgWaitTime[lowestAvgWaitingTimeIndex]);
+            for (int i = 0; i < 6; i++) {
+                if (avgWaitTime[i+(tempSet->set_num*6)] == avgWaitTime[lowestAvgWaitingTimeIndex])
+                    printf("> %s\n", Jobs[i]);
+            }
+
+            tempSet = tempSet->nextSet;
+
+		}while(tempSet != NULL);
 
 		printf("\nto quit : 'q'\nto restart : input any key\n");
 
