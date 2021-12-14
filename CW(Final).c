@@ -385,10 +385,10 @@ int main(void) {
 
 							if (queue[loop]->burstLeft > queue[loop + 1]->burstLeft) {
 
-								queue[size] = queue[loop];
+								queue[size+1] = queue[loop];
 								queue[loop] = queue[loop + 1];
-								queue[loop + 1] = queue[size]; //bubble sort queue pointer
-								queue[size] = NULL; //set temp pointer to NULL
+								queue[loop + 1] = queue[size+1]; //bubble sort queue pointer
+								queue[size+1] = NULL; //set temp pointer to NULL
 
 								sortFlag = 1;
 							}
@@ -506,10 +506,10 @@ int main(void) {
 									queue[0]->loadFlag = 0;
 								}
 
-								queue[size] = queue[loop];
+								queue[size+1] = queue[loop];
 								queue[loop] = queue[loop + 1];
-								queue[loop + 1] = queue[size]; //bubble sort queue pointer
-								queue[size] = NULL; //set temp pointer to NULL
+								queue[loop + 1] = queue[size+1]; //bubble sort queue pointer
+								queue[size+1] = NULL; //set temp pointer to NULL
 
 								sortFlag = 1;
 							}
@@ -553,10 +553,10 @@ int main(void) {
 
 					if (queue[loop]->completionTime > queue[loop + 1]->completionTime) {
 
-						queue[size] = queue[loop];
+						queue[size+1] = queue[loop];
 						queue[loop] = queue[loop + 1];
-						queue[loop + 1] = queue[size]; //bubble sort queue pointer
-						queue[size] = NULL; //set temp pointer to NULL
+						queue[loop + 1] = queue[size+1]; //bubble sort queue pointer
+						queue[size+1] = NULL; //set temp pointer to NULL
 
 						sortFlag = 1;
 					}
