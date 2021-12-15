@@ -69,6 +69,9 @@ int main(void) {
 	double *avgWaitTime;
 	double *avgTurnaroundTime;
 
+	int modes[6]; //new
+	int last; //new
+
 	do {
 
         int totalJobs = 0;
@@ -649,10 +652,86 @@ int main(void) {
                     printf("> %s\n", Jobs[i]);
             }
 
+            for(int i = 0; i < 6; i++){
+                modes[i] = i;
+            }
+
+            last = 5;
+
+            do { //sort sets according to average times
+                int i = 0;
+                int tempMode = 0;
+                double temp = 0;
+				sortFlag = 0; //sort flag
+
+				while (i!=last) {
+
+					if (avgTurnaroundTime[i+(tempSet->set_num*6)] > avgTurnaroundTime[(i+1)+(tempSet->set_num*6)]) {
+
+						temp = avgTurnaroundTime[i+(tempSet->set_num*6)];
+						avgTurnaroundTime[i+(tempSet->set_num*6)] = avgTurnaroundTime[(i+1)+(tempSet->set_num*6)];
+						avgTurnaroundTime[(i+1)+(tempSet->set_num*6)] = temp; //bubble sort times
+						temp = 0; //set temp to 0
+
+						tempMode = modes[i];
+						modes[i] = modes[i+1];
+						modes[i+1] = tempMode;
+						tempMode = 0;
+
+						sortFlag = 1;
+					}
+					i++;
+				}
+				last--;
+			} while (sortFlag);
+
+            printf("\nAvg Turnaround Time In Ascending Order\n");
+            for (int i = 0; i < 6; i++) {
+                printf("> %s - %0.3f\n", Jobs[modes[i]],avgTurnaroundTime[i+(tempSet->set_num*6)]);
+            }
+
             printf("\nLowest Avg Waiting Time : %0.3f\n", avgWaitTime[lowestAvgWaitingTimeIndex]);
             for (int i = 0; i < 6; i++) {
                 if (avgWaitTime[i+(tempSet->set_num*6)] == avgWaitTime[lowestAvgWaitingTimeIndex])
                     printf("> %s\n", Jobs[i]);
+            }
+
+            for(int i = 0; i < 6; i++){
+                modes[i] = i;
+            }
+
+            last = 5;
+
+            do { //sort sets according to average times
+                int i = 0;
+                int tempMode = 0;
+                double temp = 0;
+				sortFlag = 0; //sort flag
+
+				while (i!=last) {
+
+					if (avgWaitTime[i+(tempSet->set_num*6)] > avgWaitTime[(i+1)+(tempSet->set_num*6)]) {
+
+						temp = avgWaitTime[i+(tempSet->set_num*6)];
+						avgWaitTime[i+(tempSet->set_num*6)] = avgWaitTime[(i+1)+(tempSet->set_num*6)];
+						avgWaitTime[(i+1)+(tempSet->set_num*6)] = temp; //bubble sort times
+						temp = 0; //set temp to 0
+
+						tempMode = modes[i];
+						modes[i] = modes[i+1];
+						modes[i+1] = tempMode;
+						tempMode = 0;
+
+						sortFlag = 1;
+					}
+					i++;
+				}
+				last--;
+			} while (sortFlag);
+
+            printf("\nAvg Waiting Time In Ascending Order\n");
+            for (int i = 0; i < 6; i++) {
+                printf("> %s - %0.3f\n", Jobs[modes[i]],avgWaitTime[i+(tempSet->set_num*6)]);
             }
 
             tempSet = tempSet->nextSet;
