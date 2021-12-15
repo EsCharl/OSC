@@ -631,7 +631,7 @@ int main(void) {
 
 				int sumWaitTime = 0, sumTurnaroundTime = 0;
 
-				printf("\n%-15s | %-3s | %-3s : %-6s | %-6s | %-6s | %-6s\n", "Job Name", "A.T", "B.T", "E.T", "C.T", "T.A.T", "W.T");
+				printf("\n\n%-15s | %-3s | %-3s : %-6s | %-6s | %-6s | %-6s\n", "Job Name", "A.T", "B.T", "E.T", "C.T", "T.A.T", "W.T");
 
 				for (loop = (totalJobs * mode) + tempSet->job_before; loop < (totalJobs * mode) + tempSet->job_before + tempSet->job_num; loop++) { //print out information from loop
 
