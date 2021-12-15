@@ -653,6 +653,43 @@ int main(void) {
 		}
 		printf("\nA.T = Arrival Time\nB.T = Burst Time\nE.T = Entry Time\nC.T = Complete Time\nT.A.T = Turnaround Time\nW.T = Wait Time\n");
 
+		mode = 0;
+
+		do {
+
+            double lowestAvgWaitingTime = 99999, lowestAvgTurnaroundTime = 99999;
+            int lowestAvgWaitingTimeIndex, lowestAvgTurnaroundTimeIndex;
+
+			for (int i = 0; i < setNum; i++) {
+				if (lowestAvgWaitingTime >= avgWaitTime[mode + (i*6)]) {
+					lowestAvgWaitingTime = avgWaitTime[mode + (i*6)];
+					lowestAvgWaitingTimeIndex = mode + (i*6);
+				}
+
+				if (lowestAvgTurnaroundTime >= avgTurnaroundTime[mode + (i*6)]) {
+					lowestAvgTurnaroundTime = avgTurnaroundTime[mode + (i*6)];
+					lowestAvgTurnaroundTimeIndex = mode + (i*6);
+				}
+			}
+
+			printf("\n\n%s\n", Jobs[mode]);
+
+			printf("\nLowest Avg Turnaround Time : %0.3f\n", avgTurnaroundTime[lowestAvgTurnaroundTimeIndex]);
+			for (int i = 0; i < setNum; i++) {
+				if (avgTurnaroundTime[mode + (i*6)] == avgTurnaroundTime[lowestAvgTurnaroundTimeIndex])
+					printf("> Set %d\n", i+1);
+			}
+
+			printf("\nLowest Avg Waiting Time : %0.3f\n", avgWaitTime[lowestAvgWaitingTimeIndex]);
+			for (int i = 0; i < setNum; i++) {
+				if (avgWaitTime[mode + (i*6)] == avgWaitTime[lowestAvgWaitingTimeIndex])
+					printf("> Set %d\n", i+1);
+			}
+
+			mode++;
+
+		}while(mode!=6);
+
 		tempSet = fPtr;
 
 		do {
