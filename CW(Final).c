@@ -191,10 +191,37 @@ int main(void) {
 				else {
 					// start loading it into a linked list.
 					while (!feof(read)) {
+						char *token;
+						char *temp[3];
 						char readline[100];
+						int i = 0;
+
 						fgets(readline, sizeof(readline), read);
 
-						sscanf(readline, "%s , %d , %d", N->job_name, &N->arrivalTime, &N->burst);
+						token = strtok(readline, ",");
+						while( token != NULL ) {
+							temp[i] = token;
+							token = strtok(NULL, ",");
+							i++;
+						}
+
+						if(atoi(temp[1])<0 || atoi(temp[2])<1){
+							printf("\n%s rejected",temp[0]);
+							if(atoi(temp[1])<0 && atoi(temp[2])<1){
+								printf(" due to invalid arrival time and burst time.");
+							}
+							else if(atoi(temp[1])<0){
+								printf(" due to invalid arrival time.");
+							}
+							else if(atoi(temp[2])<1){
+								printf(" due to invalid burst time.");
+							}
+							continue;
+						}
+
+						strcpy(N->job_name,temp[0]);
+						N->arrivalTime = atoi(temp[1]);
+						N->burst = atoi(temp[2]);
 
 						N->completionTime = 0;
 						N->turnaroundTime = 0;
@@ -204,17 +231,6 @@ int main(void) {
 						N->entryTime = 0;
 						N->loadFlag = 0;
 						jobNum++;
-
-						if (N->burst <= 0) {
-							printf("Burst time cannot be less than 1.");
-							sleep(5);
-							return 0;
-						}
-						else if (N->arrivalTime < 0) {
-							printf("Arrival time cannot be less than 0.");
-							sleep(5);
-							return 0;
-						}
 
 						if (!feof(read)) {
 							N->next = malloc(sizeof(node));
@@ -641,7 +657,7 @@ int main(void) {
 
 		do {
 
-			double lowestAvgWaitingTime = 999999999999999999, lowestAvgTurnaroundTime = 999999999999999999;
+			double lowestAvgWaitingTime = 99999, lowestAvgTurnaroundTime = 99999;
 			int lowestAvgWaitingTimeIndex, lowestAvgTurnaroundTimeIndex;
 			for (int i = 0; i < 6; i++) {
 				if (lowestAvgWaitingTime >= avgWaitTime[i + (tempSet->set_num * 6)]) {
