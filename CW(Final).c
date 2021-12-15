@@ -178,7 +178,7 @@ int main(void) {
 			}
 			else {
 				printf("\nPlease input the file you'd like to load into the program.\n");
-				printf("    *Please ensure the file is in .txt file\n    *Use \" , \" to seperate each category.the format of seperation should be : \n(Job Name) , (Arrival time) , (Burst)\n\n * Job Name Should not contain any spaces\n");
+				printf("    *Please ensure the file is in .txt file\n    *Use \",\" to seperate each category.the format of seperation should be : \n(Job Name),(Arrival time),(Burst)\n\n");
 				scanf("%s", fname);
 				read = fopen(fname, "r");
 
@@ -191,35 +191,35 @@ int main(void) {
 				else {
 					// start loading it into a linked list.
 					while (!feof(read)) {
-						char *token;
-						char *temp[3];
+						char* token;
+						char* temp[3];
 						char readline[100];
 						int i = 0;
 
 						fgets(readline, sizeof(readline), read);
 
 						token = strtok(readline, ",");
-						while( token != NULL ) {
+						while (token != NULL) {
 							temp[i] = token;
 							token = strtok(NULL, ",");
 							i++;
 						}
 
-						if(atoi(temp[1])<0 || atoi(temp[2])<1){
-							printf("\n%s rejected",temp[0]);
-							if(atoi(temp[1])<0 && atoi(temp[2])<1){
+						if (atoi(temp[1]) < 0 || atoi(temp[2]) < 1) {
+							printf("\n%s rejected", temp[0]);
+							if (atoi(temp[1]) < 0 && atoi(temp[2]) < 1) {
 								printf(" due to invalid arrival time and burst time.");
 							}
-							else if(atoi(temp[1])<0){
+							else if (atoi(temp[1]) < 0) {
 								printf(" due to invalid arrival time.");
 							}
-							else if(atoi(temp[2])<1){
+							else if (atoi(temp[2]) < 1) {
 								printf(" due to invalid burst time.");
 							}
 							continue;
 						}
 
-						strcpy(N->job_name,temp[0]);
+						strcpy(N->job_name, temp[0]);
 						N->arrivalTime = atoi(temp[1]);
 						N->burst = atoi(temp[2]);
 
@@ -786,18 +786,18 @@ int main(void) {
 
 		do {
 
-            double lowestAvgWaitingTime = 99999, lowestAvgTurnaroundTime = 99999;
-            int lowestAvgWaitingTimeIndex, lowestAvgTurnaroundTimeIndex;
+			double lowestAvgWaitingTime = 99999, lowestAvgTurnaroundTime = 99999;
+			int lowestAvgWaitingTimeIndex, lowestAvgTurnaroundTimeIndex;
 
 			for (int i = 0; i < setNum; i++) {
-				if (lowestAvgWaitingTime >= avgWaitTime[mode + (i*6)]) {
-					lowestAvgWaitingTime = avgWaitTime[mode + (i*6)];
-					lowestAvgWaitingTimeIndex = mode + (i*6);
+				if (lowestAvgWaitingTime >= avgWaitTime[mode + (i * 6)]) {
+					lowestAvgWaitingTime = avgWaitTime[mode + (i * 6)];
+					lowestAvgWaitingTimeIndex = mode + (i * 6);
 				}
 
-				if (lowestAvgTurnaroundTime >= avgTurnaroundTime[mode + (i*6)]) {
-					lowestAvgTurnaroundTime = avgTurnaroundTime[mode + (i*6)];
-					lowestAvgTurnaroundTimeIndex = mode + (i*6);
+				if (lowestAvgTurnaroundTime >= avgTurnaroundTime[mode + (i * 6)]) {
+					lowestAvgTurnaroundTime = avgTurnaroundTime[mode + (i * 6)];
+					lowestAvgTurnaroundTimeIndex = mode + (i * 6);
 				}
 			}
 
@@ -805,19 +805,19 @@ int main(void) {
 
 			printf("\nLowest Avg Turnaround Time : %0.3f\n", avgTurnaroundTime[lowestAvgTurnaroundTimeIndex]);
 			for (int i = 0; i < setNum; i++) {
-				if (avgTurnaroundTime[mode + (i*6)] == avgTurnaroundTime[lowestAvgTurnaroundTimeIndex])
-					printf("> Set %d\n", i+1);
+				if (avgTurnaroundTime[mode + (i * 6)] == avgTurnaroundTime[lowestAvgTurnaroundTimeIndex])
+					printf("> Set %d\n", i + 1);
 			}
 
 			printf("\nLowest Avg Waiting Time : %0.3f\n", avgWaitTime[lowestAvgWaitingTimeIndex]);
 			for (int i = 0; i < setNum; i++) {
-				if (avgWaitTime[mode + (i*6)] == avgWaitTime[lowestAvgWaitingTimeIndex])
-					printf("> Set %d\n", i+1);
+				if (avgWaitTime[mode + (i * 6)] == avgWaitTime[lowestAvgWaitingTimeIndex])
+					printf("> Set %d\n", i + 1);
 			}
 
 			mode++;
 
-		}while(mode!=6);
+		} while (mode != 6);
 
 		printf("\nto quit : 'q'\nto restart : input any key\n");
 
