@@ -653,48 +653,12 @@ int main(void) {
 		}
 		printf("\nA.T = Arrival Time\nB.T = Burst Time\nE.T = Entry Time\nC.T = Complete Time\nT.A.T = Turnaround Time\nW.T = Wait Time\n");
 
-		mode = 0;
-
-		do {
-
-            double lowestAvgWaitingTime = 99999, lowestAvgTurnaroundTime = 99999;
-            int lowestAvgWaitingTimeIndex, lowestAvgTurnaroundTimeIndex;
-
-			for (int i = 0; i < setNum; i++) {
-				if (lowestAvgWaitingTime >= avgWaitTime[mode + (i*6)]) {
-					lowestAvgWaitingTime = avgWaitTime[mode + (i*6)];
-					lowestAvgWaitingTimeIndex = mode + (i*6);
-				}
-
-				if (lowestAvgTurnaroundTime >= avgTurnaroundTime[mode + (i*6)]) {
-					lowestAvgTurnaroundTime = avgTurnaroundTime[mode + (i*6)];
-					lowestAvgTurnaroundTimeIndex = mode + (i*6);
-				}
-			}
-
-			printf("\n\n%s\n", Jobs[mode]);
-
-			printf("\nLowest Avg Turnaround Time : %0.3f\n", avgTurnaroundTime[lowestAvgTurnaroundTimeIndex]);
-			for (int i = 0; i < setNum; i++) {
-				if (avgTurnaroundTime[mode + (i*6)] == avgTurnaroundTime[lowestAvgTurnaroundTimeIndex])
-					printf("> Set %d\n", i+1);
-			}
-
-			printf("\nLowest Avg Waiting Time : %0.3f\n", avgWaitTime[lowestAvgWaitingTimeIndex]);
-			for (int i = 0; i < setNum; i++) {
-				if (avgWaitTime[mode + (i*6)] == avgWaitTime[lowestAvgWaitingTimeIndex])
-					printf("> Set %d\n", i+1);
-			}
-
-			mode++;
-
-		}while(mode!=6);
-
 		tempSet = fPtr;
 
 		do {
 
 			double lowestAvgWaitingTime = 99999, lowestAvgTurnaroundTime = 99999;
+			double temp[6];
 			int lowestAvgWaitingTimeIndex, lowestAvgTurnaroundTimeIndex;
 			for (int i = 0; i < 6; i++) {
 				if (lowestAvgWaitingTime >= avgWaitTime[i + (tempSet->set_num * 6)]) {
@@ -718,6 +682,10 @@ int main(void) {
 
 			for (int i = 0; i < 6; i++) {
 				modes[i] = i;
+			}
+
+			for (int i = 0; i < 6; i++) {
+				temp[i] = avgTurnaroundTime[i + (tempSet->set_num * 6)];
 			}
 
 			last = 5;
@@ -754,6 +722,10 @@ int main(void) {
 				printf("> %s - %0.3f\n", Jobs[modes[i]], avgTurnaroundTime[i + (tempSet->set_num * 6)]);
 			}
 
+			for (int i = 0; i < 6; i++) {
+				avgTurnaroundTime[i + (tempSet->set_num * 6)] = temp[i];
+			}
+
 			printf("\nLowest Avg Waiting Time : %0.3f\n", avgWaitTime[lowestAvgWaitingTimeIndex]);
 			for (int i = 0; i < 6; i++) {
 				if (avgWaitTime[i + (tempSet->set_num * 6)] == avgWaitTime[lowestAvgWaitingTimeIndex])
@@ -762,6 +734,10 @@ int main(void) {
 
 			for (int i = 0; i < 6; i++) {
 				modes[i] = i;
+			}
+
+			for (int i = 0; i < 6; i++) {
+				temp[i] = avgWaitTime[i + (tempSet->set_num * 6)];
 			}
 
 			last = 5;
@@ -798,9 +774,50 @@ int main(void) {
 				printf("> %s - %0.3f\n", Jobs[modes[i]], avgWaitTime[i + (tempSet->set_num * 6)]);
 			}
 
+			for (int i = 0; i < 6; i++) {
+				avgWaitTime[i + (tempSet->set_num * 6)] = temp[i];
+			}
+
 			tempSet = tempSet->nextSet;
 
 		} while (tempSet != NULL);
+
+		mode = 0;
+
+		do {
+
+            double lowestAvgWaitingTime = 99999, lowestAvgTurnaroundTime = 99999;
+            int lowestAvgWaitingTimeIndex, lowestAvgTurnaroundTimeIndex;
+
+			for (int i = 0; i < setNum; i++) {
+				if (lowestAvgWaitingTime >= avgWaitTime[mode + (i*6)]) {
+					lowestAvgWaitingTime = avgWaitTime[mode + (i*6)];
+					lowestAvgWaitingTimeIndex = mode + (i*6);
+				}
+
+				if (lowestAvgTurnaroundTime >= avgTurnaroundTime[mode + (i*6)]) {
+					lowestAvgTurnaroundTime = avgTurnaroundTime[mode + (i*6)];
+					lowestAvgTurnaroundTimeIndex = mode + (i*6);
+				}
+			}
+
+			printf("\n\n%s\n", Jobs[mode]);
+
+			printf("\nLowest Avg Turnaround Time : %0.3f\n", avgTurnaroundTime[lowestAvgTurnaroundTimeIndex]);
+			for (int i = 0; i < setNum; i++) {
+				if (avgTurnaroundTime[mode + (i*6)] == avgTurnaroundTime[lowestAvgTurnaroundTimeIndex])
+					printf("> Set %d\n", i+1);
+			}
+
+			printf("\nLowest Avg Waiting Time : %0.3f\n", avgWaitTime[lowestAvgWaitingTimeIndex]);
+			for (int i = 0; i < setNum; i++) {
+				if (avgWaitTime[mode + (i*6)] == avgWaitTime[lowestAvgWaitingTimeIndex])
+					printf("> Set %d\n", i+1);
+			}
+
+			mode++;
+
+		}while(mode!=6);
 
 		printf("\nto quit : 'q'\nto restart : input any key\n");
 
