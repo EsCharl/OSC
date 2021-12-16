@@ -166,11 +166,8 @@ int main(void) {
 						N = N->next;
 					}
 
-					if (exit[0] == 'q' && jobNum == 1) {
-						printf("this software need at least 2 jobs\n");
-					}
 
-				} while (exit[0] != 'q' || strlen(exit) > 1 || jobNum <= 1);
+				} while (exit[0] != 'q' || strlen(exit) > 1 || jobNum <= 0);
 			}
 			else {
 				printf("\nPlease input the file you'd like to load into the program.\n");
