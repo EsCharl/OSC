@@ -92,7 +92,7 @@ int main(void) {
 			S->firstJob = N;
 			S->job_before = totalJobs;
 
-			printf("\nHow would you like to input the inputs\n");
+			printf("\nHow would you like to input the inputs. (Set %d)\n",setNum+1);
 			do {
 				printf("Please enter a value of 1 or 2.\n");
 				printf(" 1. Manually Input.\n 2. Input via .txt file.\n");
@@ -104,7 +104,7 @@ int main(void) {
 				do {
 					do {
 						fail = 0;
-						printf("\nJob name?(no spaces)\n");
+						printf("\nJob name?(no spaces) (Job %d)\n",jobNum+1);
 						gets(N->job_name);
 
 						for (int x = 0; x < strlen(N->job_name); x++) {
@@ -118,7 +118,7 @@ int main(void) {
 
 					do {
 						fail = 0;
-						printf("Arrival Time? (Integer)\n");
+						printf("Arrival Time? (Integer) (Job %d)\n",jobNum+1);
 						gets(checkIfInt);
 
 						for (int x = 0; x < strlen(checkIfInt); x++) {
@@ -133,7 +133,7 @@ int main(void) {
 
 					do {
 						fail = 0;
-						printf("Burst Time (integer)\n");
+						printf("Burst Time (integer) (Job %d)\n",jobNum+1);
 						gets(checkIfInt);
 
 						for (int x = 0; x < strlen(checkIfInt); x++) {
