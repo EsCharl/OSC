@@ -1,10 +1,90 @@
 How to run this code?
 - double click on "CW(Final).exe"
 
-For the input text file
-- Make sure inputs are exact.
+The program requires 2 sets of jobs at the minimum to function.
+Each set of jobs require a minimum of 1 valid job each.
+
+Each job contains a job name, arrival time and burst time.
+For the job to be considered valid, there are 3 criteria:
+1. Job name must not have spaces
+2. Arrival time must be >= 0
+3. Burst time must be >= 1
+
+After entering the program, the program will ask the user to
+enter their first set of jobs. There are 2 options for the 
+user. 
+
+Entering 1 allows user to manually input their jobs.
+The program will ask for the job name, arrival time and
+burst time of the first job. Any invalid inputs will result
+in the program asking for a new, valid input. After the first
+job is entered. The program will ask the user if he/she wishes
+to enter more jobs. Press 'q' to quit and anything else to
+enter a new job.
+
+Entering 2 allows user to input the jobs via a text file.
+The program will ask for the text file name. If the entered
+name is invalid, the program will terminate. If the jobs are
+invalid, the program will reject the invalid job and continue
+reading the text file.
+
+For the input text file:
+- Format of jobs are (job name),(arrival time),(burst time) 
+  without spaces
+- Each new job is in a new line.
 - No extra new lines or extra spaces.
-- To prevent any errors
+- Example
+  P1,1,6
+  P2,2,5
+  P3,0,12
+
+After entering 2 sets of jobs, the program will ask the user if 
+he/she wishes to enter more sets of jobs. Press 'q' to quit and 
+anything else to enter a new set of jobs.
+
+The program will then ask for the time quantum for the Round
+Robin algorithms. Time quantum must be >0. Invalid inputs 
+will result in the system asking for a new, valid input.
+
+The program will then ask for the time delay for the algorithms
+with delays. Time delay must be >0. Invalid inputs will result 
+in the system asking for a new, valid input.
+
+Then, the system will calculate the results based on 6 modes or
+algorithms which are:
+ 1. Shortest Job First (SJF) Preemptive Version.
+ 2. Shortest Job First (SJF) Non-Preemptive Version.
+ 3. Round Robin (RR) with Overhead.
+ 4. Round Robin (RR) without Overhead.
+ 5. Round Robin (RR) with Overhead without Arrival Time.
+ 6. Round Robin (RR) without Overhead without Arrival Time.
+
+The results for each algorithm will be presented in a table
+for each set of jobs. There will also be a queue showing the
+how the entire set of jobs is processed each second. The
+results shown will include Entry Time, Completion Time,
+Turnaround Time and Waiting Time. The results are sorted based 
+on Completion Time.
+
+Entry Time = Time job first enters front of queue
+Completion Time = Time job completes processing
+Turnaround Time = Completion Time - Arrival Time
+Waiting Time = Entry Time - Arrival Time
+
+Then, the lowest average turnaround time and waiting time
+for each set of jobs will be listed with their respective
+algorithm. If there are multiple algorithms with the same 
+lowest times, they will also be listed. The average turnaround 
+time and waiting time for each set of jobs will also be listed 
+in ascending order.
+
+Finally, the lowest average turnaround time and waiting time
+for each algorithm will be listed with their respective
+sets of job. If there are multiple sets of jobs with the same 
+lowest times, they will also be listed.
+
+After this, the user can press 'q' to quit the program or anything 
+else to restart the program.
 
 ***************************************
 Shown below are the main components contained within the program that
