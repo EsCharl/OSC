@@ -33,12 +33,11 @@ struct Set
 
 int main(void) {
 	char fname[100];
-	char inputMode;
-	char exit;
+	char inputMode[10];
+	char exit[10];
+	char quit[10];
+	char done[10]; //new
 	char blank;
-	char quit;
-
-	char done; //new
 
 	char Jobs[6][60] = { "Shortest Job First (SJF) Preemptive Version", "Shortest Job First (SJF) Non-Preemptive Version", "Round Robin (RR) with Overhead", "Round Robin (RR) without Overhead","Round Robin (RR) with Overhead without Arrival Time", "Round Robin (RR) without Overhead without Arrival Time" };
 
@@ -98,12 +97,12 @@ int main(void) {
 				printf("Please enter a value of 1 or 2.\n");
 				printf(" 1. Manually Input.\n 2. Input via .txt file.\n");
 
-				scanf(" %c", &inputMode);
-			} while (!(inputMode == '1' || inputMode == '2'));
+				scanf("%s", inputMode);
+			} while (!(inputMode[0] == '1' || inputMode[0] == '2') || strlen(inputMode) > 1);
 
 			scanf("%c", &blank);
 
-			if (inputMode == '1') {
+			if (inputMode[0] == '1') {
 				do {
 					do {
 						fail = 0;
@@ -161,20 +160,20 @@ int main(void) {
 
 					printf("Would you like to add more jobs? (q to quit)\n");
 
-					scanf("%c", &exit);
+					scanf("%s", exit);
 
-					if (exit != 'q' || jobNum <= 1) {
+					if (exit[0] != 'q' || strlen(exit) > 1 || jobNum <= 1) {
 						N->next = malloc(sizeof(node));
 						N = N->next;
 					}
 
-					if (exit == 'q' && jobNum == 1) {
+					if (exit[0] == 'q' && jobNum == 1) {
 						printf("this software need at least 2 jobs\n");
 					}
 
 					scanf("%c", &blank);
 
-				} while (exit != 'q' || jobNum <= 1);
+				} while (exit[0] != 'q' || strlen(exit) > 1 || jobNum <= 1);
 			}
 			else {
 				printf("\nPlease input the file you'd like to load into the program.\n");
@@ -261,20 +260,20 @@ int main(void) {
 
 			printf("Would you like to add more sets? (q to quit)\n");
 
-			scanf("%c", &done);
+			scanf("%s", done);
 
-			if (done != 'q' || setNum <= 1) {
+			if (done[0] != 'q' || strlen(done) > 1 || setNum <= 1) {
 				S->nextSet = malloc(sizeof(set));
 				S = S->nextSet;
 			}
 
-			if (done == 'q' && setNum == 1) {
+			if (done[0] == 'q' && setNum == 1) {
 				printf("this software need at least 2 sets\n");
 			}
 
 			scanf("%c", &blank);
 
-		} while (done != 'q' || setNum <= 1);
+		} while (done[0] != 'q' || strlen(done) > 1 || setNum <= 1);
 
 		S->nextSet = NULL;
 		printf("\n%i sets entered.\n", setNum);
@@ -821,7 +820,7 @@ int main(void) {
 
 		printf("\nto quit : 'q'\nto restart : input any key\n");
 
-		scanf(" %c", &quit);
+		scanf("%s", quit);
 
 		scanf("%c", &blank);
 
@@ -846,7 +845,7 @@ int main(void) {
 		free(avgWaitTime);
 		free(avgTurnaroundTime);
 
-	} while (quit != 'q');
+	} while (quit[0] != 'q' || strlen(quit) > 1);
 
 	printf("Thanks for using the Chew Language Scheduling Algorithm Program.\n");
 	sleep(5);
