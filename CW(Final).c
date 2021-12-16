@@ -160,12 +160,10 @@ int main(void) {
 
 					gets(exit);
 
-
 					if (exit[0] != 'q' || strlen(exit) > 1 || jobNum <= 1) {
 						N->next = malloc(sizeof(node));
 						N = N->next;
 					}
-
 
 				} while (exit[0] != 'q' || strlen(exit) > 1 || jobNum <= 0);
 			}
@@ -232,8 +230,8 @@ int main(void) {
 					} // end while
 
 					fclose(read);
-					if (jobNum <= 1) {
-						printf("the text file need at least 2 jobs\n");
+					if (jobNum <= 0) {
+						printf("\n\nthe text file need at least 1 job\n");
 						printf("the software will now shut down");
 						printf("\n");
 						sleep(5);
@@ -253,19 +251,13 @@ int main(void) {
 			setNum++;
 
 			if(setNum >= 2){
-
-			printf("Would you like to add more sets? (q to quit)\n");
-
-			gets(done);
-		}
+                printf("Would you like to add more sets? (q to quit)\n");
+                gets(done);
+            }
 
 			if (done[0] != 'q' || strlen(done) > 1 || setNum <= 1) {
 				S->nextSet = malloc(sizeof(set));
 				S = S->nextSet;
-			}
-
-			if (done[0] == 'q' && setNum == 1) {
-				printf("this software need at least 2 sets\n");
 			}
 
 		} while (done[0] != 'q' || strlen(done) > 1 || setNum <= 1);
