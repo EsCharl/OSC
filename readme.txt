@@ -1,6 +1,8 @@
 How to run this code?
 - double click on "Group(19)-OSC-CW-System.exe"
 
+There will be 2 sets of workload included. namely: "Set1.txt" and "Set2.txt".
+
 The program requires 2 sets of jobs at the minimum to function.
 Each set of jobs require a minimum of 1 valid job each.
 
