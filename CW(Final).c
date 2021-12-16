@@ -615,6 +615,8 @@ int main(void) {
 					temp->entryTime = 0;
 				}
 
+				printf("\n\nSet %d",tempSet->set_num + 1);
+
 				int sumWaitTime = 0, sumTurnaroundTime = 0;
 
 				printf("\n\n%-15s | %-3s | %-3s : %-6s | %-6s | %-6s | %-6s\n", "Job Name", "A.T", "B.T", "E.T", "C.T", "T.A.T", "W.T");
