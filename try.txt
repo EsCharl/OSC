@@ -1,2 +1,11 @@
-ployhello , 30 , 2
-text , 5 , 3
+ploy hello,30,2
+text,5,3
+ploy,1,1
+ployhello1,30,7
+text1,10,6
+ploy1,2,5
+ploy7,,,-1
+ploy2,0,5
+ploy3,2,0
+ploy4,-20,5
+ploy5y,2,5-98
