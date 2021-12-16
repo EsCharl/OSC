@@ -97,10 +97,8 @@ int main(void) {
 				printf("Please enter a value of 1 or 2.\n");
 				printf(" 1. Manually Input.\n 2. Input via .txt file.\n");
 
-				scanf("%s", inputMode);
+				gets(inputMode);
 			} while (!(inputMode[0] == '1' || inputMode[0] == '2') || strlen(inputMode) > 1);
-
-			scanf("%c", &blank);
 
 			if (inputMode[0] == '1') {
 				do {
@@ -160,7 +158,7 @@ int main(void) {
 
 					printf("Would you like to add more jobs? (q to quit)\n");
 
-					scanf("%s", exit);
+					gets(exit);
 
 					if (exit[0] != 'q' || strlen(exit) > 1 || jobNum <= 1) {
 						N->next = malloc(sizeof(node));
@@ -170,8 +168,6 @@ int main(void) {
 					if (exit[0] == 'q' && jobNum == 1) {
 						printf("this software need at least 2 jobs\n");
 					}
-
-					scanf("%c", &blank);
 
 				} while (exit[0] != 'q' || strlen(exit) > 1 || jobNum <= 1);
 			}
@@ -260,7 +256,7 @@ int main(void) {
 
 			printf("Would you like to add more sets? (q to quit)\n");
 
-			scanf("%s", done);
+			gets(done);
 
 			if (done[0] != 'q' || strlen(done) > 1 || setNum <= 1) {
 				S->nextSet = malloc(sizeof(set));
@@ -270,8 +266,6 @@ int main(void) {
 			if (done[0] == 'q' && setNum == 1) {
 				printf("this software need at least 2 sets\n");
 			}
-
-			scanf("%c", &blank);
 
 		} while (done[0] != 'q' || strlen(done) > 1 || setNum <= 1);
 
@@ -820,9 +814,7 @@ int main(void) {
 
 		printf("\nto quit : 'q'\nto restart : input any key\n");
 
-		scanf("%s", quit);
-
-		scanf("%c", &blank);
+		gets(quit);
 
 		printf("\n");
 
