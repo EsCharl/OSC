@@ -268,7 +268,7 @@ int main(void) {
 				printf("this software need at least 2 sets\n");
 			}
 
-		} while (done[0] != 'q' || strlen(done) > 1 || setNum <= 2);
+		} while (done[0] != 'q' || strlen(done) > 1 || setNum <= 1);
 
 		S->nextSet = NULL;
 		printf("\n%i sets entered.\n", setNum);
