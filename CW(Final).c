@@ -160,7 +160,7 @@ int main(void) {
 
 					gets(exit);
 
-					if (exit[0] != 'q' || strlen(exit) > 1 || jobNum <= 1) {
+					if (exit[0] != 'q' || strlen(exit) > 1 || jobNum <= 0) {
 						N->next = malloc(sizeof(node));
 						N = N->next;
 					}
@@ -231,7 +231,7 @@ int main(void) {
 
 					fclose(read);
 					if (jobNum <= 0) {
-						printf("\n\nthe text file need at least 1 job\n");
+						printf("\n\nthe text file needs at least 1 valid job\n");
 						printf("the software will now shut down");
 						printf("\n");
 						sleep(5);
