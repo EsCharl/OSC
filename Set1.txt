@@ -1,0 +1,6 @@
+FastJob,2,17
+LongJob,4,40
+ShortJob,6,4
+MidTime,8,14
+MidBurst,12,23
+SlowJob,30,14
